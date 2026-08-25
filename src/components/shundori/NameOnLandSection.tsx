@@ -1,12 +1,10 @@
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Download, RefreshCw, RotateCcw } from "lucide-react";
-import { appData } from "@/data/shundori-data";
+import { ArrowLeft, Download, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router";
+import { appData } from "@/data/shundori-data";
 
-const NASA_URL = "https://science.nasa.gov/specials/your-name-in-landsat/";
-
-// Letter tile data — each letter has 3 variants from real NASA Landsat imagery
+// Satellite letter tiles — each letter has 3 variants with real NASA Landsat locations
 const TILES: Record<string, { file: string; loc: string; coords: string; sat: string }[]> = {
   A: [
     { file: "/landsat/a-1.svg", loc: "Hickman, Kentucky", coords: "36°35'N · 89°20'W", sat: "Landsat 8" },
@@ -142,17 +140,19 @@ const TILES: Record<string, { file: string; loc: string; coords: string; sat: st
 
 const VARIANTS = 3;
 
-// Get variant indices for a name — cycles through variants each submission
-function getVariants(name: string, variantRound: number): (number)[] {
-  const upper = name.toUpperCase().replace(/[^A-Z]/g, "");
-  return upper.split("").map((ch, i) => {
-    const tiles = TILES[ch];
-    if (!tiles) return 0;
-    return (variantRound + i) % tiles.length;
-  });
+function getVariantIndices(name: string, round: number): number[] {
+  return name
+    .toUpperCase()
+    .replace(/[^A-Z]/g, "")
+    .split("")
+    .map((ch, i) => {
+      const tiles = TILES[ch];
+      if (!tiles) return 0;
+      return (round + i) % tiles.length;
+    });
 }
 
-// Single satellite tile
+// Single tile component
 function Tile({ letter, variantIdx, index }: { letter: string; variantIdx: number; index: number }) {
   const [showInfo, setShowInfo] = useState(false);
   const tiles = TILES[letter.toUpperCase()];
@@ -161,30 +161,39 @@ function Tile({ letter, variantIdx, index }: { letter: string; variantIdx: numbe
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.85, y: 15 }}
+      initial={{ opacity: 0, scale: 0.85, y: 12 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 24, delay: index * 0.07 }}
-      className="relative flex-shrink-0 cursor-pointer"
+      transition={{ type: "spring", stiffness: 300, damping: 24, delay: index * 0.06 }}
+      className="relative flex-shrink-0 cursor-pointer group"
       onClick={() => setShowInfo(!showInfo)}
       tabIndex={0}
       role="button"
-      aria-label={`Letter ${letter} from ${tile.loc}`}
+      aria-label={`Letter ${letter} — ${tile.loc}`}
     >
-      <div className="w-[68px] h-[95px] rounded-lg overflow-hidden relative"
-        style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.35)" }}>
-        <img src={tile.file} alt={`Letter ${letter}`}
-          className="w-full h-full object-cover" draggable={false} />
+      <div
+        className="w-[68px] h-[95px] rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-105"
+        style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.35)" }}
+      >
+        <img
+          src={tile.file}
+          alt={`Letter ${letter}`}
+          className="w-full h-full object-cover"
+          draggable={false}
+        />
       </div>
 
       <AnimatePresence>
         {showInfo && (
-          <motion.div initial={{ opacity: 0, y: 5, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 5, scale: 0.95 }}
+          <motion.div
+            initial={{ opacity: 0, y: 4, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.96 }}
             className="absolute z-30 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-xl whitespace-nowrap"
-            style={{ background: "rgba(0,0,0,0.88)", backdropFilter: "blur(10px)" }}>
+            style={{ background: "rgba(0,0,0,0.88)", backdropFilter: "blur(12px)" }}
+          >
             <p className="text-[10px] text-white font-medium">{tile.loc}</p>
-            <p className="text-[9px] text-white/60">{tile.coords}</p>
-            <p className="text-[8px] text-white/40 mt-0.5">{tile.sat}</p>
+            <p className="text-[9px] text-white/55">{tile.coords}</p>
+            <p className="text-[8px] text-white/35 mt-0.5">{tile.sat}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -202,7 +211,7 @@ export default function NameOnLandSection() {
 
   const displayName = submitted && name.trim() ? name.trim().toUpperCase() : appData.personName;
   const letters = displayName.split("").filter((c) => /[A-Z]/i.test(c));
-  const variants = submitted ? getVariants(displayName, variantRound) : [];
+  const variants = submitted ? getVariantIndices(displayName, variantRound) : [];
 
   const handleSubmit = useCallback(() => {
     if (name.trim()) {
@@ -211,80 +220,108 @@ export default function NameOnLandSection() {
     }
   }, [name]);
 
-  const handleCycleVariants = useCallback(() => {
-    setVariantRound((r) => r + 1);
-  }, []);
+  const handleCycle = useCallback(() => setVariantRound((r) => r + 1), []);
 
-  const handleReset = useCallback(() => {
-    setName("");
-    setSubmitted(false);
-    setVariantRound(0);
-  }, []);
-
-  // Download composite as PNG
-  const handleDownload = useCallback(async () => {
-    const el = compositeRef.current;
-    if (!el) return;
-    try {
-      const { default: html2canvas } = await import("html2canvas");
-      const canvas = await html2canvas(el, { backgroundColor: null, scale: 2, useCORS: true });
+  const handleDownload = useCallback(() => {
+    letters.forEach((ch, i) => {
+      const vi = variants[i] || 0;
+      const tiles = TILES[ch.toUpperCase()];
+      if (!tiles) return;
+      const tile = tiles[vi % tiles.length];
       const link = document.createElement("a");
-      link.download = `${displayName.replace(/\s+/g, "_")}_landsat.png`;
-      link.href = canvas.toDataURL("image/png");
+      link.href = tile.file;
+      link.download = `${ch.toUpperCase()}_landsat.svg`;
+      document.body.appendChild(link);
       link.click();
-    } catch {
-      // Fallback: open each tile image
-      for (let i = 0; i < letters.length; i++) {
-        const ch = letters[i].toUpperCase();
-        const vi = variants[i] || 0;
-        const tiles = TILES[ch];
-        if (tiles) {
-          const link = document.createElement("a");
-          link.href = tiles[vi % tiles.length].file;
-          link.download = `${ch}_landsat.svg`;
-          link.click();
-        }
-      }
-    }
-  }, [displayName, letters, variants]);
+      document.body.removeChild(link);
+    });
+  }, [letters, variants]);
+
+  const handleDownloadOne = useCallback((letter: string, vi: number) => {
+    const tiles = TILES[letter.toUpperCase()];
+    if (!tiles) return;
+    const tile = tiles[vi % tiles.length];
+    const link = document.createElement("a");
+    link.href = tile.file;
+    link.download = `${letter.toUpperCase()}_landsat.svg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, []);
 
   return (
     <div className="px-5 pt-2 pb-4 overflow-hidden">
       {/* Back button */}
-      <div className="flex items-center gap-3 mb-3">
-        <button onClick={() => navigate("/app")} className="p-2 rounded-xl cursor-pointer bg-transparent border-none"
-          style={{ color: "var(--accent-color, #d99aa3)" }} aria-label="Go back">
+      <div className="flex items-center gap-3 mb-4">
+        <button
+          onClick={() => navigate("/app")}
+          className="p-2 rounded-xl cursor-pointer bg-transparent border-none"
+          style={{ color: "var(--accent-color, #d99aa3)" }}
+          aria-label="Go back"
+        >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <p className="text-[13px] italic flex-1"
-          style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}>
+        <p
+          className="text-[13px] italic flex-1"
+          style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}
+        >
           Your name, written across the Earth.
         </p>
       </div>
 
-      {/* NASA-style header */}
-      <div className="text-center py-2.5 mb-4 rounded-2xl"
-        style={{ background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)" }}>
-        <p className="text-[10px] uppercase tracking-[0.2em] font-medium"
-          style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}>
+      {/* Header */}
+      <div
+        className="text-center py-2.5 mb-4 rounded-2xl"
+        style={{ background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)" }}
+      >
+        <p
+          className="text-[10px] uppercase tracking-[0.2em] font-medium"
+          style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}
+        >
           Your Name in Landsat
         </p>
       </div>
 
-      {/* Satellite tile display */}
+      {/* Satellite tiles */}
       <div className="mb-4">
         {letters.length > 0 ? (
-          <div ref={compositeRef} className="flex gap-1.5 overflow-x-auto pb-3 snap-x snap-mandatory justify-center"
-            style={{ scrollbarWidth: "none" }}>
+          <div
+            ref={compositeRef}
+            className="flex gap-1.5 overflow-x-auto pb-3 snap-x snap-mandatory justify-center"
+            style={{ scrollbarWidth: "none" }}
+          >
             {letters.map((ch, i) => (
-              <Tile key={`${ch}-${i}-${variantRound}`} letter={ch} variantIdx={variants[i] || 0} index={i} />
+              <div key={`${ch}-${i}-${variantRound}`} className="relative">
+                <Tile letter={ch} variantIdx={variants[i] || 0} index={i} />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDownloadOne(ch, variants[i] || 0);
+                  }}
+                  className="absolute bottom-12 right-0 p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer border-none"
+                  style={{
+                    background: "rgba(0,0,0,0.6)",
+                    backdropFilter: "blur(4px)",
+                  }}
+                  aria-label={`Download letter ${ch}`}
+                >
+                  <Download className="w-3 h-3 text-white" />
+                </button>
+              </div>
             ))}
           </div>
         ) : (
-          <div className="relative rounded-2xl overflow-hidden h-[140px] flex items-center justify-center"
-            style={{ background: "linear-gradient(135deg, #1a3a1a 0%, #2d5a1e 25%, #4a7c32 50%, #8fbc5a 75%, #2d5a1e 100%)" }}>
+          <div
+            className="relative rounded-2xl overflow-hidden h-[140px] flex items-center justify-center"
+            style={{
+              background:
+                "linear-gradient(135deg, #1a3a1a 0%, #2d5a1e 25%, #4a7c32 50%, #8fbc5a 75%, #2d5a1e 100%)",
+            }}
+          >
             <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.35)" }} />
-            <p className="relative z-10 text-white/50 text-sm italic">Type a name to see it in Landsat</p>
+            <p className="relative z-10 text-white/50 text-sm italic">
+              Type a name to see it in Landsat
+            </p>
           </div>
         )}
       </div>
@@ -292,13 +329,18 @@ export default function NameOnLandSection() {
       {/* Display name */}
       {submitted && (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4">
-          <h1 className="text-2xl font-bold tracking-wide" style={{ color: isDark ? "#f2f2f7" : "#1c1c1e" }}>
+          <h1
+            className="text-2xl font-bold tracking-wide"
+            style={{ color: isDark ? "#f2f2f7" : "#1c1c1e" }}
+          >
             {displayName}
           </h1>
           <div className="flex items-center justify-center gap-2 mt-2">
             <div className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent-color, #d99aa3)" }} />
-            <p className="text-[9px] uppercase tracking-[0.15em]"
-              style={{ color: isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)" }}>
+            <p
+              className="text-[9px] uppercase tracking-[0.15em]"
+              style={{ color: isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)" }}
+            >
               NASA / USGS Landsat Program
             </p>
             <div className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent-color, #d99aa3)" }} />
@@ -306,64 +348,73 @@ export default function NameOnLandSection() {
         </motion.div>
       )}
 
-      {/* Name input */}
+      {/* Input */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 px-4 py-3 rounded-2xl"
-          style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}>
+        <div
+          className="flex items-center gap-2 px-4 py-3 rounded-2xl"
+          style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}
+        >
           <span className="text-sm">🛰️</span>
-          <input type="text" placeholder="Write your name here..."
-            value={name} onChange={(e) => { setName(e.target.value); setSubmitted(false); }}
-            onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); }}
+          <input
+            type="text"
+            placeholder="Write your name here..."
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSubmit();
+            }}
             className="flex-1 bg-transparent border-none outline-none text-sm"
-            style={{ color: isDark ? "#f2f2f7" : "#1c1c1e" }} aria-label="Enter name" />
+            style={{ color: isDark ? "#f2f2f7" : "#1c1c1e" }}
+            aria-label="Enter name"
+          />
         </div>
 
         <div className="flex gap-2">
-          <motion.button whileTap={{ scale: 0.97 }} onClick={handleSubmit}
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={handleSubmit}
             disabled={!name.trim()}
             className="flex-1 py-3 rounded-2xl text-white text-sm font-semibold cursor-pointer flex items-center justify-center gap-2 border-none disabled:opacity-40 disabled:cursor-not-allowed"
-            style={{ background: "var(--accent-color, #d99aa3)" }}>
+            style={{ background: "var(--accent-color, #d99aa3)" }}
+          >
             Show My Name
           </motion.button>
 
           {submitted && (
             <>
-              <motion.button whileTap={{ scale: 0.97 }} onClick={handleCycleVariants}
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                onClick={handleCycle}
                 className="px-3.5 py-3 rounded-2xl cursor-pointer flex items-center justify-center border-none"
-                style={{ background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)", color: isDark ? "#f2f2f7" : "#1c1c1e" }}
-                aria-label="Cycle through satellite variants">
+                style={{
+                  background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+                  color: isDark ? "#f2f2f7" : "#1c1c1e",
+                }}
+                aria-label="New satellite images"
+              >
                 <RefreshCw className="w-4 h-4" />
               </motion.button>
 
-              <motion.button whileTap={{ scale: 0.97 }} onClick={handleDownload}
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                onClick={handleDownload}
                 className="px-3.5 py-3 rounded-2xl cursor-pointer flex items-center justify-center border-none"
-                style={{ background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)", color: isDark ? "#f2f2f7" : "#1c1c1e" }}
-                aria-label="Download image">
+                style={{
+                  background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+                  color: isDark ? "#f2f2f7" : "#1c1c1e",
+                }}
+                aria-label="Download all images"
+              >
                 <Download className="w-4 h-4" />
               </motion.button>
             </>
           )}
         </div>
 
-        <div className="flex gap-2">
-          {submitted && (
-            <motion.button whileTap={{ scale: 0.97 }} onClick={handleReset}
-              className="flex-1 py-2.5 rounded-2xl text-sm font-medium cursor-pointer flex items-center justify-center gap-1.5 border-none bg-transparent"
-              style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>
-              <RotateCcw className="w-3.5 h-3.5" /> Reset
-            </motion.button>
-          )}
-
-          <motion.button whileTap={{ scale: 0.97 }}
-            onClick={() => window.open(NASA_URL, "_blank", "noopener,noreferrer")}
-            className="flex-1 py-2.5 rounded-2xl text-sm font-medium cursor-pointer flex items-center justify-center gap-1.5 border-none bg-transparent"
-            style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>
-            View on NASA ↗
-          </motion.button>
-        </div>
-
-        <p className="text-center text-[11px]"
-          style={{ color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)" }}>
+        <p
+          className="text-center text-[11px]"
+          style={{ color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)" }}
+        >
           Tap a tile to see its real location · Tap 🔄 for new satellite images
         </p>
       </div>
