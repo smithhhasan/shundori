@@ -40,6 +40,21 @@ export default function ShundoriApp() {
   const isHomePage = location.pathname === "/app" || location.pathname === "/app/";
   const isSubPage = !isHomePage && location.pathname.startsWith("/app/");
 
+  // Left-edge swipe back gesture (iPhone-style)
+  const swipeStart = useRef<{ x: number; y: number } | null>(null);
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    if (touch.clientX < 20) swipeStart.current = { x: touch.clientX, y: touch.clientY };
+  }, []);
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!swipeStart.current) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - swipeStart.current.x;
+    const dy = Math.abs(touch.clientY - swipeStart.current.y);
+    swipeStart.current = null;
+    if (dx > 80 && dy < 60) navigate("/app");
+  }, [navigate]);
+
   // Session check
   useEffect(() => {
     if (!localStorage.getItem(STORAGE.auth)) navigate("/", { replace: true });
@@ -131,7 +146,9 @@ export default function ShundoriApp() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "var(--bg-color)", color: isDark ? "#e0e0e0" : undefined, maxWidth: "480px", margin: "0 auto", position: "relative" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--bg-color)", color: isDark ? "#e0e0e0" : undefined, maxWidth: "480px", margin: "0 auto", position: "relative" }}
+      onTouchStart={isSubPage ? handleTouchStart : undefined}
+      onTouchEnd={isSubPage ? handleTouchEnd : undefined}>
       {/* Persistent Dynamic Island */}
       {isSubPage && <PersistentIsland context={getContextFromPath(location.pathname)} />}
 

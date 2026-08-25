@@ -130,36 +130,59 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
           ))}
         </div>
 
-        {/* Search — above Recently Opened */}
-        <div className="mb-3 px-1">
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-full transition-all"
-            style={{ background: searchFocused ? (isDark ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.08)") : (isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)") }}>
-            <Search className="w-4 h-4 opacity-40" style={{ color: isDark ? "#fff" : "#000" }} />
-            <input ref={searchRef} type="text" value={search} onChange={(e) => setSearch(e.target.value)}
-              onFocus={() => setSearchFocused(true)} onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
-              placeholder="Search apps" className="flex-1 bg-transparent border-none outline-none text-sm"
-              style={{ color: isDark ? "#fff" : "#000" }} aria-label="Search apps" />
-            {search && <button onClick={() => setSearch("")} className="cursor-pointer bg-transparent border-none" aria-label="Clear search">
-              <X className="w-4 h-4 opacity-30" style={{ color: isDark ? "#fff" : "#000" }} /></button>}
-          </div>
-          <AnimatePresence>
-            {search.trim() && searchFocused && (
-              <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
-                className="mt-2 rounded-2xl overflow-hidden"
-                style={{ background: isDark ? "rgba(30,30,46,0.95)" : "rgba(255,255,255,0.95)", backdropFilter: "blur(20px)", boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
-                {filtered.length > 0 ? filtered.map((app) => (
-                  <button key={app.id} onMouseDown={(e) => e.preventDefault()} onClick={() => openSection(app)}
-                    className="w-full flex items-center gap-3 px-4 py-3 cursor-pointer hover:opacity-80 transition-opacity bg-transparent border-none text-left"
-                    style={{ borderBottom: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.04)" }}>
-                    <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: app.gradient }}>
-                      <span className="scale-[0.6]">{app.icon}</span>
-                    </div>
-                    <span className="text-sm font-medium" style={{ color: isDark ? "#fff" : "#000" }}>{app.label}</span>
-                  </button>
-                )) : <p className="px-4 py-4 text-xs text-center" style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}>No apps found</p>}
-              </motion.div>
+        {/* Search — Dynamic Island style */}
+        <div className="mb-3 px-1 flex justify-center">
+          <div className="relative">
+            <motion.div layout
+              animate={{ width: searchFocused ? 280 : 126, height: searchFocused ? 44 : 37 }}
+              transition={{ type: "spring", stiffness: 300, damping: 24 }}
+              className="rounded-full flex items-center px-4 gap-2 cursor-pointer overflow-hidden"
+              style={{ background: "#000" }}>
+              {!searchFocused ? (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 w-full">
+                  <Search className="w-3.5 h-3.5 text-white/60 shrink-0" />
+                  <span className="text-white/50 text-[11px] truncate">Search</span>
+                </motion.div>
+              ) : (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 w-full">
+                  <Search className="w-4 h-4 text-white/60 shrink-0" />
+                  <input ref={searchRef} type="text" value={search} onChange={(e) => setSearch(e.target.value)}
+                    onBlur={() => { if (!search) setTimeout(() => setSearchFocused(false), 150); }}
+                    placeholder="Search apps" autoFocus
+                    className="flex-1 bg-transparent border-none outline-none text-sm text-white placeholder:text-white/30"
+                    aria-label="Search apps" />
+                  {search && <button onClick={() => setSearch("")} className="cursor-pointer bg-transparent border-none p-0.5" aria-label="Clear search">
+                    <X className="w-3.5 h-3.5 text-white/40" /></button>}
+                  <button onClick={() => { setSearch(""); setSearchFocused(false); }} className="cursor-pointer bg-transparent border-none p-0.5" aria-label="Close search">
+                    <X className="w-4 h-4 text-white/50" /></button>
+                </motion.div>
+              )}
+            </motion.div>
+            {/* Tap target when collapsed */}
+            {!searchFocused && (
+              <div className="absolute inset-0 rounded-full" onClick={() => setSearchFocused(true)} />
             )}
-          </AnimatePresence>
+            {/* Search results dropdown */}
+            <AnimatePresence>
+              {search.trim() && searchFocused && (
+                <motion.div initial={{ opacity: 0, y: -5, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -5, scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 24 }}
+                  className="absolute left-1/2 -translate-x-1/2 mt-2 w-[280px] rounded-2xl overflow-hidden z-50"
+                  style={{ background: "rgba(28,28,30,0.97)", backdropFilter: "blur(40px)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 8px 32px rgba(0,0,0,0.3)" }}>
+                  {filtered.length > 0 ? filtered.map((app) => (
+                    <button key={app.id} onMouseDown={(e) => e.preventDefault()} onClick={() => openSection(app)}
+                      className="w-full flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors bg-transparent border-none text-left"
+                      style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: app.gradient }}>
+                        <span className="scale-[0.6]">{app.icon}</span>
+                      </div>
+                      <span className="text-sm font-medium text-white">{app.label}</span>
+                    </button>
+                  )) : <p className="px-4 py-4 text-xs text-center text-white/30">No apps found</p>}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Recently Opened — 4 apps max */}
