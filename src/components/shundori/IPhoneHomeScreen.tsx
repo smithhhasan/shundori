@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Image, Heart, MessageCircle, Clock, Gift, MapPin, Settings, Cloud, Search, X } from "lucide-react";
+import { Image, Heart, MessageCircle, Clock, Gift, MapPin, Settings, Search, X } from "lucide-react";
 import { useNavigate } from "react-router";
 import { type ThemeName, appData, STORAGE } from "@/data/shundori-data";
 
@@ -99,10 +99,60 @@ export default function PhoneHomeScreen({ onToggleDark, isDark }: Props) {
   const [recentIds, setRecentIds] = useState<string[]>(loadRecent);
   const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const now = new Date();
+  // Live clock
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
   const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  const dayStr = now.toLocaleDateString([], { weekday: "long" });
+  const dayStr = now.toLocaleDateString([], { weekday: "long" }).toUpperCase();
   const dateNum = now.getDate();
+
+  // Real weather via Open-Meteo (free, no API key)
+  const [weather, setWeather] = useState<{ temp: number; desc: string; icon: string } | null>(null);
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        // Default: Dhaka, Bangladesh (change lat/lon for your location)
+        const res = await fetch(
+          "https://api.open-meteo.com/v1/forecast?latitude=23.8103&longitude=90.4125&current=temperature_2m,weather_code&timezone=auto"
+        );
+        const data = await res.json();
+        const temp = Math.round(data.current.temperature_2m);
+        const code = data.current.weather_code;
+        // WMO weather codes → description + icon
+        const wmo: Record<number, { desc: string; icon: string }> = {
+          0: { desc: "Clear Sky", icon: "☀️" },
+          1: { desc: "Mainly Clear", icon: "🌤️" },
+          2: { desc: "Partly Cloudy", icon: "⛅" },
+          3: { desc: "Overcast", icon: "☁️" },
+          45: { desc: "Foggy", icon: "🌫️" },
+          48: { desc: "Rime Fog", icon: "🌫️" },
+          51: { desc: "Light Drizzle", icon: "🌦️" },
+          53: { desc: "Drizzle", icon: "🌦️" },
+          55: { desc: "Dense Drizzle", icon: "🌧️" },
+          61: { desc: "Light Rain", icon: "🌦️" },
+          63: { desc: "Rain", icon: "🌧️" },
+          65: { desc: "Heavy Rain", icon: "🌧️" },
+          71: { desc: "Light Snow", icon: "❄️" },
+          73: { desc: "Snow", icon: "❄️" },
+          75: { desc: "Heavy Snow", icon: "❄️" },
+          80: { desc: "Light Showers", icon: "🌦️" },
+          81: { desc: "Showers", icon: "🌧️" },
+          82: { desc: "Heavy Showers", icon: "⛈️" },
+          95: { desc: "Thunderstorm", icon: "⛈️" },
+          96: { desc: "Thunderstorm + Hail", icon: "⛈️" },
+          99: { desc: "Thunderstorm + Heavy Hail", icon: "⛈️" },
+        };
+        const match = wmo[code] || { desc: "Cloudy", icon: "☁️" };
+        setWeather({ temp, desc: match.desc, icon: match.icon });
+      } catch {
+        setWeather({ temp: 24, desc: "Partly Cloudy", icon: "⛅" });
+      }
+    };
+    fetchWeather();
+  }, []);
 
   const openSection = (app: AppItem) => {
     setOpenApp(app.id);
@@ -114,7 +164,7 @@ export default function PhoneHomeScreen({ onToggleDark, isDark }: Props) {
   const recentApps = recentIds.map((id) => ALL_APPS.find((a) => a.id === id)).filter(Boolean) as AppItem[];
 
   return (
-    <div className="min-h-full flex flex-col relative overflow-hidden">
+    <div className="min-h-screen h-screen flex flex-col relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none" style={{
         background: isDark
           ? "linear-gradient(170deg, #1a1a2e 0%, #16213e 20%, #0f3460 45%, #533483 70%, #1a1a2e 100%)"
@@ -137,26 +187,59 @@ export default function PhoneHomeScreen({ onToggleDark, isDark }: Props) {
         </div>
       </div>
 
-      <div className="relative z-10 flex-1 overflow-y-auto px-5 pt-2 pb-4">
+      <div className="relative z-10 flex-1 overflow-y-auto px-5 pt-2 pb-8">
         {/* Widgets */}
         <div className="grid grid-cols-2 gap-3 mb-4 px-1">
+          {/* Weather Widget — Liquid Glass */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="rounded-[22px] p-4 overflow-hidden"
-            style={{ background: "linear-gradient(180deg, #3a7bd5 0%, #5ba3e6 100%)" }}>
-            <p className="text-white/80 text-[11px] font-medium">{appData.appName}</p>
-            <div className="flex items-end gap-1 mt-1">
-              <span className="text-white text-[42px] font-thin leading-none">24°</span>
-              <div className="pb-1"><Cloud className="w-5 h-5 text-white/80" /></div>
+            className="rounded-[22px] p-4 overflow-hidden relative"
+            style={{
+              background: isDark
+                ? "linear-gradient(135deg, rgba(58,123,213,0.35) 0%, rgba(91,163,230,0.2) 100%)"
+                : "linear-gradient(135deg, rgba(58,123,213,0.45) 0%, rgba(91,163,230,0.3) 100%)",
+              backdropFilter: "blur(20px) saturate(1.8)",
+              WebkitBackdropFilter: "blur(20px) saturate(1.8)",
+              border: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(255,255,255,0.35)",
+              boxShadow: isDark
+                ? "0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05)"
+                : "0 8px 32px rgba(58,123,213,0.15), inset 0 1px 0 rgba(255,255,255,0.4)",
+            }}>
+            {/* Liquid glass shine overlay */}
+            <div className="absolute inset-0 pointer-events-none" style={{
+              background: "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(255,255,255,0.05) 100%)",
+            }} />
+            <p className="relative text-white/80 text-[11px] font-medium">{appData.appName}</p>
+            <div className="relative flex items-end gap-1 mt-1">
+              <span className="text-white text-[42px] font-thin leading-none">
+                {weather ? `${weather.temp}°` : "--°"}
+              </span>
+              <span className="relative pb-1 text-[20px]">{weather?.icon || "⛅"}</span>
             </div>
-            <p className="text-white/70 text-[11px] mt-1">Partly Cloudy</p>
+            <p className="relative text-white/70 text-[11px] mt-1">{weather?.desc || "Loading..."}</p>
           </motion.div>
+
+          {/* Calendar Widget — Liquid Glass */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-            className="rounded-[22px] p-4 overflow-hidden cursor-pointer"
-            style={{ background: isDark ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.85)" }}
+            className="rounded-[22px] p-4 overflow-hidden cursor-pointer relative"
+            style={{
+              background: isDark
+                ? "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)"
+                : "linear-gradient(135deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.55) 100%)",
+              backdropFilter: "blur(20px) saturate(1.8)",
+              WebkitBackdropFilter: "blur(20px) saturate(1.8)",
+              border: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(255,255,255,0.5)",
+              boxShadow: isDark
+                ? "0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05)"
+                : "0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6)",
+            }}
             onClick={() => setSheetApp("calendar")} role="button" aria-label="Open calendar" tabIndex={0}>
-            <p className="text-red-500 text-[10px] font-semibold uppercase tracking-wider">{dayStr}</p>
-            <p className="text-foreground text-[42px] font-light leading-none mt-0.5">{dateNum}</p>
-            <div className="mt-2 flex items-center gap-1.5">
+            {/* Liquid glass shine */}
+            <div className="absolute inset-0 pointer-events-none" style={{
+              background: "linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(255,255,255,0.08) 100%)",
+            }} />
+            <p className="relative text-red-500 text-[10px] font-semibold uppercase tracking-wider">{dayStr}</p>
+            <p className="relative text-foreground text-[42px] font-light leading-none mt-0.5">{dateNum}</p>
+            <div className="relative mt-2 flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-red-400" />
               <p className="text-foreground/60 text-[10px] truncate">A Special Day</p>
             </div>
@@ -227,9 +310,12 @@ export default function PhoneHomeScreen({ onToggleDark, isDark }: Props) {
           </div>
         </div>
 
+        {/* Spacer to fill remaining space */}
+        <div className="flex-1" />
+
         {/* Recently Opened — icons only, swipe to dismiss */}
         {recentApps.length > 0 && (
-          <div className="mb-6 px-1">
+          <div className="mb-4 px-1">
             <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}>Recently Opened</p>
             <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
               {recentApps.map((app) => (
