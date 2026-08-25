@@ -43,8 +43,6 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-const NASA_URL = "https://science.nasa.gov/specials/your-name-in-landsat/";
-
 export default function NameOnLandSection() {
   const navigate = useNavigate();
   const isDark = localStorage.getItem("shundori:darkMode") === "true";
@@ -291,19 +289,6 @@ export default function NameOnLandSection() {
         <p className="text-center text-[11px]" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)" }}>
           Supported names: QUAZI · SUBAH
         </p>
-
-        {/* Optional NASA reference */}
-        <div className="text-center mt-1">
-          <a
-            href={NASA_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[10px] underline"
-            style={{ color: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)" }}
-          >
-            Or check your name on NASA directly ↗
-          </a>
-        </div>
       </div>
     </div>
   );
