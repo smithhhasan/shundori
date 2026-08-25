@@ -1,11 +1,7 @@
 // Shundori — All customizable content lives here.
-// localStorage key namespace: shundori:
 
 export const LOGIN_NAME = "QUAZI ZARIN SUBAH";
 export const LOGIN_PASSWORD = "4May2003";
-
-// Date the couple first met — used for "Days Together" counter
-export const FIRST_MEET_DATE = "2023-01-15";
 
 export type ThemeName = "rose" | "pink" | "lavender" | "midnight" | "warm-white" | "soft-blue";
 export const DEFAULT_THEME: ThemeName = "rose";
@@ -86,14 +82,14 @@ export const appData = {
   landMessage: "Some names deserve the world.",
 };
 
-// Namespaced localStorage helpers
+// localStorage keys
 export const STORAGE = {
-  auth: "shundori:auth",
-  theme: "shundori:theme",
-  darkMode: "shundori:nightMode",
-  appName: "shundori:appName",
-  appIcon: "shundori:appIcon",
-  photos: "shundori:photos",
-  favorites: "shundori:favorites",
-  recentApps: "shundori:recentApps",
+  auth: "shundori-auth",
+  theme: "shundori-theme",
+  darkMode: "shundori-dark",
+  appName: "shundori-appName",
+  appIcon: "shundori-appIcon",
+  photos: "shundori-photos",
+  favorites: "shundori-favorites",
+  recentApps: "shundori-recentApps",
 } as const;

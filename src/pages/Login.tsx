@@ -1,9 +1,10 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
 import { Eye, EyeOff, CalendarDays, User, Lock } from "lucide-react";
 import { LOGIN_NAME, LOGIN_PASSWORD, appData, STORAGE } from "@/data/shundori-data";
 import DynamicIsland from "@/components/shundori/DynamicIsland";
+import CalendarPicker from "@/components/shundori/CalendarPicker";
 
 function normalizeDate(s: string): string {
   const trimmed = s.trim();
@@ -22,17 +23,6 @@ export default function Login() {
   const [shake, setShake] = useState(false);
   const [phase, setPhase] = useState<"form" | "welcome" | "island">("form");
   const [showCalendar, setShowCalendar] = useState(false);
-  const calBtnRef = useRef<HTMLButtonElement>(null);
-
-  // Close calendar on Escape
-  useEffect(() => {
-    if (!showCalendar) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setShowCalendar(false);
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [showCalendar]);
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -50,13 +40,6 @@ export default function Login() {
   }, [name, password]);
 
   const handleIslandComplete = useCallback(() => navigate("/app"), [navigate]);
-
-  // Calendar picks a date → writes formatted string into password field
-  const handleCalendarSelect = (dateStr: string) => {
-    setPassword(dateStr);
-    setShowCalendar(false);
-    setError("");
-  };
 
   if (phase === "welcome") {
     return (
@@ -90,7 +73,7 @@ export default function Login() {
         </div>
 
         <motion.form onSubmit={handleSubmit} animate={shake ? { x: [-10, 10, -8, 8, -4, 4, 0] } : {}}
-          transition={{ duration: 0.35 }} className="space-y-4" role="form" aria-label="Sign in"
+          transition={{ duration: 0.35 }} className="space-y-4"
         >
           {/* Name */}
           <div className="flex items-center gap-3 px-4 py-3.5 rounded-xl"
@@ -99,44 +82,37 @@ export default function Login() {
             <input type="text" placeholder="Your name" value={name}
               onChange={(e) => { setName(e.target.value); setError(""); }}
               className="flex-1 bg-transparent border-none outline-none text-sm"
-              style={{ color: "var(--ivory, #1c1c1e)", fontFamily: "-apple-system, 'SF Pro Text', sans-serif" }}
-              aria-label="Name" autoComplete="name" />
+              style={{ color: "var(--ivory, #1c1c1e)", fontFamily: "-apple-system, 'SF Pro Text', sans-serif" }} />
           </div>
 
           {/* Password with calendar + eye */}
           <div className="relative">
             <div className="flex items-center gap-3 px-4 py-3.5 rounded-xl"
-              style={{ background: "rgba(0,0,0,0.04)", border: showCalendar ? "1px solid var(--accent-color, #d99aa3)" : "1px solid rgba(0,0,0,0.06)" }}>
+              style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.06)" }}>
               <Lock className="w-4 h-4 shrink-0" style={{ color: "var(--mauve, #8a5a67)" }} />
               <input type={showPassword ? "text" : "password"} placeholder="Password"
                 value={password} onChange={(e) => { setPassword(e.target.value); setError(""); }}
                 className="flex-1 bg-transparent border-none outline-none text-sm"
-                style={{ color: "var(--ivory, #1c1c1e)", fontFamily: "-apple-system, 'SF Pro Text', sans-serif" }}
-                aria-label="Password" autoComplete="current-password" />
+                style={{ color: "var(--ivory, #1c1c1e)", fontFamily: "-apple-system, 'SF Pro Text', sans-serif" }} />
               <div className="flex items-center gap-0.5">
-                <button type="button" ref={calBtnRef}
-                  aria-label="Pick a date"
-                  onClick={(e) => { e.stopPropagation(); setShowCalendar(!showCalendar); }}
-                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setShowCalendar(!showCalendar); } }}
+                <button type="button" onClick={() => setShowCalendar(!showCalendar)}
                   className="p-1.5 rounded-lg cursor-pointer bg-transparent border-none transition-colors hover:bg-black/5"
-                  style={{ color: "var(--mauve, #8a5a67)" }}
-                  tabIndex={0}>
+                  style={{ color: "var(--mauve, #8a5a67)" }}>
                   <CalendarDays className="w-4 h-4" />
                 </button>
-                <button type="button" aria-label={showPassword ? "Hide password" : "Show password"}
-                  onClick={() => setShowPassword(!showPassword)}
+                <button type="button" onClick={() => setShowPassword(!showPassword)}
                   className="p-1.5 rounded-lg cursor-pointer bg-transparent border-none transition-colors hover:bg-black/5"
-                  style={{ color: "var(--mauve, #8a5a67)" }} tabIndex={0}>
+                  style={{ color: "var(--mauve, #8a5a67)" }}>
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            {/* Calendar picker — anchored below password field */}
+            {/* Calendar picker */}
             <AnimatePresence>
               {showCalendar && (
-                <CalendarPickerInline
-                  onSelect={handleCalendarSelect}
+                <CalendarPicker
+                  onSelect={(dateStr) => { setPassword(dateStr); setShowCalendar(false); setError(""); }}
                   onClose={() => setShowCalendar(false)}
                   accentColor="var(--accent-color, #d99aa3)"
                 />
@@ -148,7 +124,7 @@ export default function Login() {
           <AnimatePresence>
             {error && (
               <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="text-xs text-center" style={{ color: "#ef4444" }} role="alert">{error}</motion.p>
+                className="text-xs text-center" style={{ color: "#ef4444" }}>{error}</motion.p>
             )}
           </AnimatePresence>
 
@@ -161,68 +137,5 @@ export default function Login() {
         </motion.form>
       </motion.div>
     </div>
-  );
-}
-
-// Inline calendar picker — anchored under the password field
-function CalendarPickerInline({ onSelect, onClose, accentColor }: {
-  onSelect: (dateStr: string) => void; onClose: () => void; accentColor: string;
-}) {
-  const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const DAYS = ["Su","Mo","Tu","We","Th","Fr","Sa"];
-  const today = new Date();
-  const [viewDate, setViewDate] = useState(new Date(2003, 4, 1));
-  const [selected, setSelected] = useState<Date | null>(null);
-
-  const year = viewDate.getFullYear();
-  const month = viewDate.getMonth();
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const cells: (number | null)[] = [];
-  for (let i = 0; i < firstDay; i++) cells.push(null);
-  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
-
-  const selectDay = (day: number) => {
-    const d = new Date(year, month, day);
-    setSelected(d);
-    onSelect(`${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`);
-  };
-
-  const isSelected = (day: number) => selected?.getDate() === day && selected?.getMonth() === month && selected?.getFullYear() === year;
-  const isToday = (day: number) => today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
-
-  return (
-    <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95, y: -4 }} transition={{ duration: 0.15 }}
-      className="absolute right-0 top-full mt-2 z-50 w-[300px] rounded-2xl p-4 shadow-xl"
-      style={{ background: "rgba(28,28,30,0.97)", backdropFilter: "blur(40px)", border: "1px solid rgba(255,255,255,0.08)" }}
-      role="dialog" aria-label="Date picker">
-      <div className="flex items-center justify-between mb-3">
-        <button onClick={() => setViewDate(new Date(year, month - 1, 1))} className="p-1 rounded-lg cursor-pointer bg-transparent border-none hover:bg-white/10" tabIndex={0}>
-          <span className="text-white/60 text-sm">‹</span>
-        </button>
-        <p className="text-white text-sm font-semibold">{MONTHS[month]} {year}</p>
-        <button onClick={onClose} className="p-1 rounded-lg cursor-pointer bg-transparent border-none hover:bg-white/10" tabIndex={0}>
-          <span className="text-white/40 text-sm">✕</span>
-        </button>
-      </div>
-      <div className="grid grid-cols-7 gap-1 mb-2">
-        {DAYS.map((d) => <div key={d} className="text-center text-[10px] text-white/30 font-medium py-1">{d}</div>)}
-      </div>
-      <div className="grid grid-cols-7 gap-1">
-        {cells.map((day, i) => (
-          <button key={i} disabled={day === null} onClick={() => day && selectDay(day)} tabIndex={day ? 0 : -1}
-            className="aspect-square flex items-center justify-center rounded-xl text-xs cursor-pointer transition-all border-none"
-            style={{
-              color: day === null ? "transparent" : isSelected(day!) ? "#fff" : "rgba(255,255,255,0.8)",
-              background: isSelected(day!) ? accentColor : isToday(day!) ? "rgba(255,255,255,0.06)" : "transparent",
-              fontWeight: isSelected(day!) ? 600 : 400,
-            }}>
-            {day}
-          </button>
-        ))}
-      </div>
-      <p className="text-center text-[10px] text-white/20 mt-3">Select the password date</p>
-    </motion.div>
   );
 }

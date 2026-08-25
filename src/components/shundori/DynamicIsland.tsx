@@ -5,14 +5,8 @@ interface DynamicIslandProps { onComplete: () => void; }
 
 export default function DynamicIsland({ onComplete }: DynamicIslandProps) {
   const [stage, setStage] = useState<"idle" | "island" | "expand" | "collapse" | "done">("idle");
-  const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   useEffect(() => {
-    if (prefersReduced) {
-      // Skip animation, just show pill briefly then complete
-      const t = setTimeout(() => onComplete(), 1200);
-      return () => clearTimeout(t);
-    }
     const timers = [
       setTimeout(() => setStage("island"), 300),
       setTimeout(() => setStage("expand"), 1400),
@@ -21,24 +15,7 @@ export default function DynamicIsland({ onComplete }: DynamicIslandProps) {
       setTimeout(() => onComplete(), 4200),
     ];
     return () => timers.forEach(clearTimeout);
-  }, [onComplete, prefersReduced]);
-
-  // Reduced motion: just fade in a pill
-  if (prefersReduced) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
-          className="w-[126px] h-[37px] bg-black rounded-full flex items-center justify-center">
-          <div className="flex items-center gap-[3px]">
-            {[4, 6, 5, 7, 4].map((h, i) => (
-              <div key={i} className="w-[3px] rounded-full bg-white" style={{ height: h }} />
-            ))}
-          </div>
-        </motion.div>
-        <p className="text-foreground/60 text-sm italic mt-6">Welcome to your world.</p>
-      </div>
-    );
-  }
+  }, [onComplete]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
@@ -115,55 +92,6 @@ export default function DynamicIsland({ onComplete }: DynamicIslandProps) {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
-  );
-}
-
-// Persistent pill for inside the app — tappable, shows context
-export function PersistentIsland({ context }: { context?: string }) {
-  const [expanded, setExpanded] = useState(false);
-  const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  useEffect(() => {
-    if (!expanded) return;
-    const t = setTimeout(() => setExpanded(false), 2000);
-    return () => clearTimeout(t);
-  }, [expanded]);
-
-  if (prefersReduced) {
-    return (
-      <div className="flex justify-center pt-3">
-        <div className="w-[126px] h-[37px] bg-black rounded-full flex items-center justify-center">
-          <div className="flex items-center gap-[3px]">
-            {[3, 5, 4, 6, 3].map((h, i) => (
-              <div key={i} className="w-[2px] rounded-full bg-white" style={{ height: h }} />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex justify-center pt-3 pb-1">
-      <motion.button onClick={() => context && setExpanded(!expanded)}
-        layout className="rounded-full bg-black flex items-center justify-center overflow-hidden cursor-pointer border-none"
-        animate={{ width: expanded ? 280 : 126, height: expanded ? 44 : 37 }}
-        transition={{ type: "spring", stiffness: 300, damping: 24 }}>
-        {expanded && context ? (
-          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="text-white text-xs font-medium px-5 truncate">{context}</motion.span>
-        ) : (
-          <div className="flex items-center gap-[2px]">
-            {[3, 5, 4, 6, 3, 5, 4].map((h, i) => (
-              <motion.div key={i} className="w-[2px] rounded-full"
-                style={{ background: "var(--accent-color, #d99aa3)" }}
-                animate={{ height: [h, h + 3, h] }}
-                transition={{ duration: 1.2, delay: i * 0.12, repeat: Infinity }} />
-            ))}
-          </div>
-        )}
-      </motion.button>
     </div>
   );
 }
