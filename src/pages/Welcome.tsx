@@ -1,227 +1,72 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
-import { appData, NO_MESSAGES } from "@/data/shundori-data";
-
-const INITIAL_NO_POS = { x: 0, y: 0 };
 
 export default function Welcome() {
   const navigate = useNavigate();
-  const [phase, setPhase] = useState(0);
-  const [showButtons, setShowButtons] = useState(false);
-  const [noClicks, setNoClicks] = useState(0);
-  const [noPos, setNoPos] = useState(INITIAL_NO_POS);
-  const [message, setMessage] = useState("");
+  const [show, setShow] = useState(false);
+  const [noOffset, setNoOffset] = useState(0);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase(1), 800);
-    const t2 = setTimeout(() => setPhase(2), 2800);
-    const t3 = setTimeout(() => setShowButtons(true), 4200);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    const t = setTimeout(() => setShow(true), 600);
+    return () => clearTimeout(t);
   }, []);
 
-  const moveNoButton = useCallback(() => {
-    const next = noClicks + 1;
-    setNoClicks(next);
-    if (next > 1 && next <= NO_MESSAGES.length + 1) {
-      setMessage(NO_MESSAGES[Math.min(next - 2, NO_MESSAGES.length - 1)]);
-    }
-    const maxX = Math.min(120, (window.innerWidth / 2) * 0.6);
-    const maxY = 40;
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 40 + Math.random() * 60;
-    setNoPos({
-      x: Math.max(-maxX, Math.min(maxX, Math.cos(angle) * dist)),
-      y: Math.max(-maxY, Math.min(maxY, Math.sin(angle) * dist)),
-    });
-  }, [noClicks]);
-
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden relative"
-      style={{ fontFamily: "'Playfair Display', Georgia, 'Times New Roman', serif" }}
+    <div className="min-h-screen flex flex-col items-center justify-center px-8"
+      style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif" }}
     >
-      {/* Soft floating hearts background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute text-lg opacity-10"
-            initial={{ y: "110vh", x: `${10 + Math.random() * 80}%` }}
-            animate={{
-              y: "-10vh",
-              x: `${10 + Math.random() * 80}%`,
-              rotate: [0, 360],
-            }}
-            transition={{
-              duration: 12 + Math.random() * 10,
-              repeat: Infinity,
-              delay: i * 1.5,
-              ease: "linear",
-            }}
-          >
-            {["✦", "♡", "✧", "❋", "♦", "❀"][i % 6]}
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Title — Playfair Display */}
       <AnimatePresence>
-        {phase >= 0 && (
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="text-center mb-8"
-            style={{
-              fontSize: "clamp(3rem, 8vw, 5rem)",
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-              color: "var(--accent-color, #e8a0b4)",
-              lineHeight: 1.1,
-            }}
-          >
-            {appData.appName}
-          </motion.h1>
-        )}
-      </AnimatePresence>
-
-      {/* Message lines — DM Sans italic */}
-      <div className="text-center space-y-1 mb-10 max-w-sm">
-        <AnimatePresence>
-          {phase >= 1 && appData.welcomeMessages.slice(0, 3).map((line, i) => (
-            <motion.p
-              key={`l1-${i}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: i * 0.4, ease: "easeOut" }}
-              style={{
-                fontFamily: "'DM Sans', -apple-system, sans-serif",
-                fontSize: "1rem",
-                fontWeight: 400,
-                fontStyle: "italic",
-                lineHeight: 1.7,
-                color: "rgba(0,0,0,0.55)",
-              }}
-            >
-              {line || "\u00A0"}
-            </motion.p>
-          ))}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {phase >= 2 && appData.welcomeMessages.slice(3).map((line, i) => (
-            <motion.p
-              key={`l2-${i}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: i * 0.4, ease: "easeOut" }}
-              style={{
-                fontFamily: "'DM Sans', -apple-system, sans-serif",
-                fontSize: "1rem",
-                fontWeight: 400,
-                fontStyle: "italic",
-                lineHeight: 1.7,
-                color: "rgba(0,0,0,0.55)",
-              }}
-            >
-              {line || "\u00A0"}
-            </motion.p>
-          ))}
-        </AnimatePresence>
-      </div>
-
-      {/* Prompt — Playfair Display */}
-      <AnimatePresence>
-        {showButtons && (
+        {show && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col items-center gap-6"
+            transition={{ duration: 0.8 }}
+            className="text-center"
           >
-            <p
-              style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: "1.25rem",
-                fontWeight: 500,
-                fontStyle: "italic",
-                color: "rgba(0,0,0,0.6)",
-                letterSpacing: "0.01em",
-              }}
+            {/* Title */}
+            <h1 className="text-[44px] font-bold tracking-tight mb-3"
+              style={{ color: "var(--accent-color, #e8a0b4)", letterSpacing: "-0.03em" }}
             >
-              Do you want to enter your world?
+              Shundori
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-sm mb-10"
+              style={{ color: "rgba(0,0,0,0.35)", fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif", fontWeight: 400 }}
+            >
+              A quiet little place, made just for you.
             </p>
 
-            <div className="flex items-center gap-8 relative">
+            {/* Question */}
+            <p className="text-sm mb-6"
+              style={{ color: "rgba(0,0,0,0.45)", fontWeight: 500 }}
+            >
+              Do you want to continue?
+            </p>
+
+            {/* Buttons */}
+            <div className="flex flex-col items-center gap-3 w-full max-w-[200px]">
               <motion.button
-                whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => navigate("/login")}
-                style={{
-                  fontFamily: "'DM Sans', -apple-system, sans-serif",
-                  background: "var(--accent-color, #e8a0b4)",
-                  color: "#fff",
-                  fontWeight: 600,
-                  fontSize: "1rem",
-                  padding: "0.75rem 2.5rem",
-                  borderRadius: "9999px",
-                  boxShadow: "0 4px 20px rgba(232,160,180,0.35)",
-                  border: "none",
-                  cursor: "pointer",
-                  letterSpacing: "0.03em",
-                }}
+                className="w-full py-3 rounded-full text-white text-sm font-semibold cursor-pointer"
+                style={{ background: "var(--accent-color, #e8a0b4)", letterSpacing: "0.01em" }}
               >
-                YES
+                Continue
               </motion.button>
 
               <motion.button
-                animate={{
-                  x: noPos.x,
-                  y: noPos.y,
-                  scale: [1, 1.04, 1],
-                }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                whileHover={{ scale: 1.04 }}
-                onClick={moveNoButton}
-                style={{
-                  fontFamily: "'DM Sans', -apple-system, sans-serif",
-                  background: "transparent",
-                  color: "rgba(0,0,0,0.35)",
-                  fontWeight: 600,
-                  fontSize: "1rem",
-                  padding: "0.75rem 2.5rem",
-                  borderRadius: "9999px",
-                  border: "2px solid rgba(0,0,0,0.12)",
-                  cursor: "pointer",
-                  letterSpacing: "0.03em",
-                }}
+                animate={{ x: noOffset }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => setNoOffset((p) => (p === 0 ? (Math.random() > 0.5 ? 30 : -30) : p + (Math.random() > 0.5 ? 15 : -15)))}
+                className="text-xs cursor-pointer bg-transparent border-none"
+                style={{ color: "rgba(0,0,0,0.25)" }}
               >
-                NO
+                Not now
               </motion.button>
             </div>
-
-            {/* Playful message */}
-            <AnimatePresence>
-              {message && (
-                <motion.p
-                  key={message}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  style={{
-                    fontFamily: "'DM Sans', -apple-system, sans-serif",
-                    fontSize: "0.875rem",
-                    fontStyle: "italic",
-                    color: "rgba(0,0,0,0.35)",
-                    marginTop: "0.25rem",
-                  }}
-                >
-                  {message}
-                </motion.p>
-              )}
-            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>

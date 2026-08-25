@@ -1,79 +1,73 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router";
+import { Image, Heart, MessageCircle, Clock, Gift, MapPin, Settings } from "lucide-react";
 import { appData } from "@/data/shundori-data";
-import { useEffect, useState } from "react";
 
-const particles = Array.from({ length: 20 }, (_, i) => ({
-  id: i,
-  char: ["♡", "✦", "✧", "❋", "❀", "⭐"][i % 6],
-  x: Math.random() * 100,
-  delay: Math.random() * 8,
-  dur: 10 + Math.random() * 10,
-  size: 12 + Math.random() * 16,
-}));
+const quickAccess = [
+  { label: "Photos", icon: Image, path: "/app/photos", color: "#f5a623" },
+  { label: "Memories", icon: Heart, path: "/app/memories", color: "#ff6b9d" },
+  { label: "Jhogra", icon: MessageCircle, path: "/app/jhogra", color: "#a18cd1" },
+  { label: "First Meet", icon: Clock, path: "/app/first-meet", color: "#4facfe" },
+  { label: "Gifts", icon: Gift, path: "/app/gifts", color: "#f093fb" },
+  { label: "Name on Land", icon: MapPin, path: "/app/name-on-land", color: "#667eea" },
+  { label: "Settings", icon: Settings, path: "/app/settings", color: "#8e8e93" },
+];
 
-export default function HomeSection() {
-  const [greeting, setGreeting] = useState("");
-  useEffect(() => {
-    const h = new Date().getHours();
-    if (h < 12) setGreeting("Good morning");
-    else if (h < 18) setGreeting("Good afternoon");
-    else setGreeting("Good evening");
-  }, []);
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 6) return "Good night";
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
+}
+
+export default function HomeSection({ customName }: { customName: string }) {
+  const navigate = useNavigate();
+  const isDark = localStorage.getItem("shundori-dark") === "true";
+  const firstName = customName.split(" ")[0] || "there";
 
   return (
-    <div className="relative min-h-full flex flex-col items-center justify-center px-6 py-10 overflow-hidden">
-      {/* Floating particles */}
-      {particles.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute pointer-events-none"
-          style={{ left: `${p.x}%`, fontSize: p.size, opacity: 0.08 }}
-          initial={{ y: "105vh" }}
-          animate={{ y: "-5vh" }}
-          transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: "linear" }}
+    <div className="px-5 pt-2 pb-4">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+        <p className="text-[13px] mb-1"
+          style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)", fontWeight: 500 }}
         >
-          {p.char}
-        </motion.div>
-      ))}
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-center z-10"
-      >
-        <p className="text-sm text-foreground/40 mb-2 tracking-wide uppercase">{greeting}</p>
-
-        <h1
-          className="text-4xl md:text-5xl font-serif mb-3"
-          style={{ color: "var(--accent-color, #e8a0b4)" }}
+          {getGreeting()}, {firstName}
+        </p>
+        <p className="text-[13px] mb-6"
+          style={{ color: isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)" }}
         >
-          {appData.appName}
-        </h1>
-
-        <p className="text-foreground/50 text-base italic max-w-xs mx-auto leading-relaxed mb-8">
-          "Made just for you."
+          A little space for the moments worth keeping.
         </p>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 1 }}
-          className="card-glass px-6 py-8 max-w-sm mx-auto"
-        >
-          <p className="text-foreground/60 text-sm leading-relaxed italic">
-            "{appData.homeQuote}"
-          </p>
-        </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="text-foreground/30 text-xs mt-8"
-        >
-          Made with love for {appData.personName}
-        </motion.p>
+        {/* Quick access grid */}
+        <div className="grid grid-cols-4 gap-3">
+          {quickAccess.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <motion.button
+                key={item.path}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.04 }}
+                whileTap={{ scale: 0.92 }}
+                onClick={() => navigate(item.path)}
+                className="flex flex-col items-center gap-1.5 cursor-pointer bg-transparent border-none"
+              >
+                <div className="w-[50px] h-[50px] rounded-[14px] flex items-center justify-center"
+                  style={{ background: `${item.color}18` }}
+                >
+                  <Icon className="w-5 h-5" style={{ color: item.color }} />
+                </div>
+                <span className="text-[10px]"
+                  style={{ color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)", fontWeight: 500 }}
+                >
+                  {item.label}
+                </span>
+              </motion.button>
+            );
+          })}
+        </div>
       </motion.div>
     </div>
   );

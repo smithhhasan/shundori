@@ -2,66 +2,58 @@ import { motion } from "framer-motion";
 import { appData } from "@/data/shundori-data";
 
 export default function FirstMeetSection() {
-  return (
-    <div className="min-h-full px-4 py-6 pb-24">
-      <motion.h2
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-2xl font-serif mb-1"
-        style={{ color: "var(--accent-color, #e8a0b4)" }}
-      >
-        First Meet
-      </motion.h2>
-      <p className="text-foreground/40 text-sm mb-8 italic">Where it all started.</p>
+  const isDark = localStorage.getItem("shundori-dark") === "true";
 
-      {/* Timeline */}
-      <div className="relative ml-4">
+  return (
+    <div className="px-5 pt-2 pb-4">
+      <p className="text-[13px] mb-6 italic"
+        style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}
+      >
+        Where the story started.
+      </p>
+
+      <div className="relative ml-3">
         {/* Vertical line */}
-        <div
-          className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full"
-          style={{ background: "var(--accent-color, #e8a0b4)", opacity: 0.3 }}
+        <div className="absolute left-0 top-2 bottom-2 w-[1.5px] rounded-full"
+          style={{ background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}
         />
 
-        <div className="space-y-8">
+        <div className="space-y-6">
           {appData.firstMeet.map((item, i) => (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: i * 0.15 }}
-              className="relative pl-8"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="relative pl-6"
             >
               {/* Dot */}
-              <motion.div
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 + 0.2, type: "spring", stiffness: 300 }}
-                className="absolute left-0 top-1 w-3 h-3 -translate-x-1/2 rounded-full border-2 border-white shadow-sm"
+              <div className="absolute left-0 top-1.5 w-2 h-2 -translate-x-[3px] rounded-full"
                 style={{ background: "var(--accent-color, #e8a0b4)" }}
               />
 
-              <div className="card-glass p-5">
-                <h3 className="font-semibold text-foreground text-base mb-1">{item.title}</h3>
-                <p className="text-foreground/50 text-sm italic leading-relaxed">
-                  "{item.description}"
+              <div className="p-4 rounded-2xl"
+                style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}
+              >
+                <p className="text-[10px] font-medium mb-1"
+                  style={{ color: "var(--accent-color, #e8a0b4)" }}
+                >
+                  {item.date}
+                </p>
+                <p className="text-sm font-semibold mb-0.5"
+                  style={{ color: isDark ? "#f2f2f7" : "#1c1c1e" }}
+                >
+                  {item.title}
+                </p>
+                <p className="text-[13px]"
+                  style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }}
+                >
+                  {item.description}
                 </p>
               </div>
             </motion.div>
           ))}
         </div>
-
-        {/* Final note */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="text-center text-foreground/30 text-sm italic mt-10"
-        >
-          And somehow, here we are. ✦
-        </motion.p>
       </div>
     </div>
   );
