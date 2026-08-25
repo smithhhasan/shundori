@@ -13,11 +13,11 @@ export default function DynamicIsland({ onComplete }: DynamicIslandProps) {
       return () => clearTimeout(t);
     }
     const timers = [
-      setTimeout(() => setStage("island"), 300),
-      setTimeout(() => setStage("expand"), 1400),
-      setTimeout(() => setStage("collapse"), 3200),
-      setTimeout(() => setStage("done"), 3800),
-      setTimeout(() => onComplete(), 4200),
+      setTimeout(() => setStage("island"), 200),
+      setTimeout(() => setStage("expand"), 800),
+      setTimeout(() => setStage("collapse"), 2000),
+      setTimeout(() => setStage("done"), 2400),
+      setTimeout(() => onComplete(), 2600),
     ];
     return () => timers.forEach(clearTimeout);
   }, [onComplete, prefersReduced]);
