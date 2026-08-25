@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Image, Heart, MessageCircle, Clock, Gift, MapPin, Settings, Cloud, Moon, Sun, LogOut, Search, X, Calendar } from "lucide-react";
 import { useNavigate } from "react-router";
-import { type ThemeName, appData, STORAGE } from "@/data/shundori-data";
+import { type ThemeName, appData, STORAGE, FIRST_MEET_DATE } from "@/data/shundori-data";
 
 interface Props { onLogout: () => void; onToggleDark: () => void; isDark: boolean; currentTheme: ThemeName; onThemeChange: (t: ThemeName) => void; }
 
@@ -17,15 +17,19 @@ const ALL_APPS = [
 ];
 type AppItem = (typeof ALL_APPS)[number];
 
+const RECENT_MAX = 6;
+
 function IosIcon({ gradient, children, size = 60, label, onTap, animDelay }: {
   gradient: string; children: React.ReactNode; size?: number; label: string; onTap?: () => void; animDelay?: number;
 }) {
-  const r = Math.round(size * 0.225);
+  const r = Math.round(size * 0.225); // true iOS squircle
+  const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   return (
     <motion.button initial={{ opacity: 0, scale: 0.2 }} animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: animDelay ?? 0, type: "spring", stiffness: 300, damping: 24 }}
-      whileTap={{ scale: 0.82 }} onClick={onTap}
-      className="flex flex-col items-center gap-[5px] cursor-pointer select-none">
+      whileTap={prefersReduced ? {} : { scale: 0.82 }} onClick={onTap}
+      className="flex flex-col items-center gap-[5px] cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-color)] focus-visible:ring-offset-2 rounded-xl"
+      tabIndex={0} aria-label={label}>
       <div className="flex items-center justify-center shadow-lg" style={{ width: size, height: size, borderRadius: r, background: gradient }}>
         {children}
       </div>
@@ -35,13 +39,33 @@ function IosIcon({ gradient, children, size = 60, label, onTap, animDelay }: {
   );
 }
 
-function loadRecent(): string[] { try { return JSON.parse(localStorage.getItem(STORAGE.recentApps) || "[]"); } catch { return []; } }
-function saveRecent(ids: string[]) { localStorage.setItem(STORAGE.recentApps, JSON.stringify(ids.slice(0, 4))); }
+function loadRecent(): string[] { try { const s = localStorage.getItem(STORAGE.recentApps); return s ? JSON.parse(s) : []; } catch { return []; } }
+function saveRecent(ids: string[]) { localStorage.setItem(STORAGE.recentApps, JSON.stringify(ids.slice(0, RECENT_MAX))); }
 function addRecent(id: string): string[] {
-  const prev = loadRecent().filter((x) => x !== id);
-  const next = [id, ...prev].slice(0, 4);
+  const prev = loadRecent();
+  const next = [id, ...prev.filter((x) => x !== id)].slice(0, RECENT_MAX);
   saveRecent(next);
   return next;
+}
+
+function DaysTogether() {
+  const days = useMemo(() => {
+    const first = new Date(FIRST_MEET_DATE);
+    const now = new Date();
+    return Math.floor((now.getTime() - first.getTime()) / 86400000);
+  }, []);
+  return (
+    <div className="rounded-[22px] p-4 flex items-center gap-3"
+      style={{ background: "linear-gradient(135deg, rgba(217,154,163,0.15), rgba(201,161,95,0.1))" }}>
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--accent-color, #d99aa3)" }}>
+        <Calendar className="w-5 h-5 text-white" />
+      </div>
+      <div>
+        <p className="text-[11px]" style={{ color: "var(--mauve, #8a5a67)" }}>Days Together</p>
+        <p className="text-xl font-bold" style={{ color: "var(--accent-color, #d99aa3)" }}>{days.toLocaleString()}</p>
+      </div>
+    </div>
+  );
 }
 
 export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Props) {
@@ -52,6 +76,7 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
   const [searchFocused, setSearchFocused] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const [recentIds, setRecentIds] = useState<string[]>(loadRecent);
+  const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const now = new Date();
   const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -61,7 +86,7 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
   const openSection = (app: AppItem) => {
     setOpenApp(app.id);
     setRecentIds(addRecent(app.id));
-    setTimeout(() => { navigate(app.path); setOpenApp(null); setSearch(""); setSearchFocused(false); }, 500);
+    setTimeout(() => { navigate(app.path); setOpenApp(null); setSearch(""); setSearchFocused(false); }, prefersReduced ? 100 : 500);
   };
 
   const filtered = search.trim() ? ALL_APPS.filter((a) => a.label.toLowerCase().includes(search.toLowerCase())) : [];
@@ -93,14 +118,14 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
       <div className="relative z-10 flex-1 overflow-y-auto px-5 pt-2 pb-4">
         {/* Search */}
         <div className="mb-4">
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-full"
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-full transition-all"
             style={{ background: searchFocused ? (isDark ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.08)") : (isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)") }}>
             <Search className="w-4 h-4 opacity-40" style={{ color: isDark ? "#fff" : "#000" }} />
             <input ref={searchRef} type="text" value={search} onChange={(e) => setSearch(e.target.value)}
               onFocus={() => setSearchFocused(true)} onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
               placeholder="Search apps" className="flex-1 bg-transparent border-none outline-none text-sm"
-              style={{ color: isDark ? "#fff" : "#000" }} />
-            {search && <button onClick={() => setSearch("")} className="cursor-pointer bg-transparent border-none">
+              style={{ color: isDark ? "#fff" : "#000" }} aria-label="Search apps" />
+            {search && <button onClick={() => setSearch("")} className="cursor-pointer bg-transparent border-none" aria-label="Clear search">
               <X className="w-4 h-4 opacity-30" style={{ color: isDark ? "#fff" : "#000" }} /></button>}
           </div>
           <AnimatePresence>
@@ -138,7 +163,7 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
             className="rounded-[22px] p-4 overflow-hidden cursor-pointer"
             style={{ background: isDark ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.85)" }}
-            onClick={() => setSheetApp("calendar")}>
+            onClick={() => setSheetApp("calendar")} role="button" aria-label="Open calendar" tabIndex={0}>
             <p className="text-red-500 text-[10px] font-semibold uppercase tracking-wider">{dayStr}</p>
             <p className="text-foreground text-[42px] font-light leading-none mt-0.5">{dateNum}</p>
             <div className="mt-2 flex items-center gap-1.5">
@@ -146,6 +171,11 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
               <p className="text-foreground/60 text-[10px] truncate">A Special Day</p>
             </div>
           </motion.div>
+        </div>
+
+        {/* Days Together */}
+        <div className="mb-4 px-1">
+          <DaysTogether />
         </div>
 
         {/* App grid */}
@@ -157,14 +187,15 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
           ))}
         </div>
 
-        {/* Recent Apps */}
+        {/* Recent Apps — 6 cap, no empty slots */}
         {recentApps.length > 0 && (
           <div className="mb-6 px-1">
             <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}>Recently Opened</p>
             <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
               {recentApps.map((app) => (
-                <motion.button key={app.id} whileTap={{ scale: 0.9 }} onClick={() => openSection(app)}
-                  className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl shrink-0 cursor-pointer transition-all bg-transparent border-none">
+                <motion.button key={app.id} whileTap={prefersReduced ? {} : { scale: 0.9 }} onClick={() => openSection(app)}
+                  className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl shrink-0 cursor-pointer transition-all bg-transparent border-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-color)]"
+                  aria-label={`Open ${app.label}`}>
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: app.gradient }}>
                     <span className="scale-[0.5]">{app.icon}</span>
                   </div>
@@ -177,12 +208,12 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
 
         {/* Night mode + Logout */}
         <div className="flex gap-3 px-1 mb-4">
-          <button onClick={onToggleDark} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl cursor-pointer transition-all bg-transparent border-none"
+          <button onClick={onToggleDark} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl cursor-pointer transition-all bg-transparent border-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-color)]"
             style={{ background: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)", color: isDark ? "#e0e0e0" : "#333" }}>
             {isDark ? <Sun className="w-4 h-4 text-yellow-400" /> : <Moon className="w-4 h-4 text-indigo-500" />}
             <span className="text-xs font-medium">{isDark ? "Light Mode" : "Night Mode"}</span>
           </button>
-          <button onClick={onLogout} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl cursor-pointer transition-all bg-transparent border-none"
+          <button onClick={onLogout} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl cursor-pointer transition-all bg-transparent border-none focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
             style={{ background: "rgba(239,68,68,0.1)", color: "#ef4444" }}>
             <LogOut className="w-4 h-4" />
             <span className="text-xs font-medium">Log Out</span>
@@ -217,7 +248,8 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
           <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="fixed inset-x-0 bottom-0 z-[90] rounded-t-[20px] p-5 pb-8"
-            style={{ background: isDark ? "#1c1c1e" : "#f2f2f7", boxShadow: "0 -4px 30px rgba(0,0,0,0.15)" }}>
+            style={{ background: isDark ? "#1c1c1e" : "#f2f2f7", boxShadow: "0 -4px 30px rgba(0,0,0,0.15)" }}
+            role="dialog" aria-label="Special dates">
             <div className="w-10 h-1 rounded-full mx-auto mb-4" style={{ background: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)" }} />
             <p className="text-center text-sm font-semibold mb-4" style={{ color: isDark ? "#fff" : "#000" }}>Special Dates</p>
             <div className="space-y-3">

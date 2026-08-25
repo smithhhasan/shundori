@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { appData } from "@/data/shundori-data";
+import { appData, STORAGE } from "@/data/shundori-data";
 
 // Pre-computed star positions
 const STARS = [...Array(25)].map((_, i) => ({
@@ -12,7 +12,7 @@ const STARS = [...Array(25)].map((_, i) => ({
 }));
 
 export default function NameOnLandSection() {
-  const isDark = localStorage.getItem("shundori-dark") === "true";
+  const isDark = localStorage.getItem(STORAGE.darkMode) === "true";
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y1 = useTransform(scrollYProgress, [0, 1], [60, -60]);

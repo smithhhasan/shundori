@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { appData } from "@/data/shundori-data";
+import { appData, STORAGE } from "@/data/shundori-data";
 
 export default function JhograSection() {
-  const isDark = localStorage.getItem("shundori-dark") === "true";
+  const isDark = localStorage.getItem(STORAGE.darkMode) === "true";
   const [open, setOpen] = useState<number | null>(null);
 
   return (

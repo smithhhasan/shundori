@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { appData } from "@/data/shundori-data";
+import { appData, STORAGE } from "@/data/shundori-data";
 
 export default function FirstMeetSection() {
-  const isDark = localStorage.getItem("shundori-dark") === "true";
+  const isDark = localStorage.getItem(STORAGE.darkMode) === "true";
 
   return (
     <div className="px-5 pt-2 pb-4">

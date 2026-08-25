@@ -1,13 +1,12 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Trash2, Camera } from "lucide-react";
-import { type Photo } from "@/data/shundori-data";
+import { type Photo, STORAGE } from "@/data/shundori-data";
 
-import { STORAGE } from "@/data/shundori-data";
 const STORAGE_KEY = STORAGE.photos;
 const FAV_KEY = STORAGE.favorites;
 
-function loadSavedPhotos(): Photo[] { try { const s = localStorage.getItem(STORAGE_KEY); if (s) return JSON.parse(s); } catch { /* ignore parse errors */ } return []; }
+function loadSavedPhotos(): Photo[] { try { const s = localStorage.getItem(STORAGE_KEY); if (s) return JSON.parse(s); } catch { /* ignore */ } return []; }
 function savePhotos(photos: Photo[]) { localStorage.setItem(STORAGE_KEY, JSON.stringify(photos)); }
 function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result as string); reader.onerror = reject; reader.readAsDataURL(file); });

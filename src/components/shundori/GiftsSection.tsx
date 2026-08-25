@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import { appData } from "@/data/shundori-data";
+import { appData, STORAGE } from "@/data/shundori-data";
 
 export default function GiftsSection() {
-  const isDark = localStorage.getItem("shundori-dark") === "true";
+  const isDark = localStorage.getItem(STORAGE.darkMode) === "true";
   const [openId, setOpenId] = useState<number | null>(null);
   const openGift = openId !== null ? appData.gifts.find((g) => g.id === openId) : null;
 
