@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
-import { Eye, EyeOff, CalendarDays, User, Lock, Loader2 } from "lucide-react";
-import { LOGIN_NAME, LOGIN_PASSWORD } from "@/data/shundori-data";
-import CalendarPicker from "@/components/shundori/CalendarPicker";
+import { Eye, EyeOff, CalendarDays } from "lucide-react";
+import { LOGIN_NAME, LOGIN_PASSWORD, appData } from "@/data/shundori-data";
+import DynamicIsland from "@/components/shundori/DynamicIsland";
 
 function normalizeDate(s: string): string {
   const trimmed = s.trim();
@@ -20,176 +20,100 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [phase, setPhase] = useState<"form" | "welcome" | "island">("form");
 
-  const canSubmit = name.trim().length > 0 && password.length > 0;
-
-  const handleSubmit = useCallback((e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canSubmit || loading) return;
-
-    setLoading(true);
-    setError("");
-
-    setTimeout(() => {
-      const normalized = normalizeDate(password);
-      if (name.trim() === LOGIN_NAME && normalized === LOGIN_PASSWORD) {
-        localStorage.setItem("shundori-auth", "true");
-        navigate("/app");
-      } else {
-        setError("Incorrect name or password.");
-        setShake(true);
-        setTimeout(() => setShake(false), 400);
-        setLoading(false);
-      }
-    }, 600);
-  }, [name, password, canSubmit, loading, navigate]);
-
-  const handleCalendarSelect = (dateStr: string) => {
-    setPassword(dateStr);
-    setShowCalendar(false);
-    setError("");
+    const normalized = normalizeDate(password);
+    if (name.trim() === LOGIN_NAME && normalized === LOGIN_PASSWORD) {
+      setError("");
+      setPhase("welcome");
+      setTimeout(() => setPhase("island"), 1400);
+    } else {
+      setError("Hmm… that doesn't look right.");
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+    }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6"
-      style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif" }}
-    >
-      {/* Back */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        onClick={() => navigate("/")}
-        className="absolute top-12 left-6 text-xs cursor-pointer bg-transparent border-none"
-        style={{ color: "rgba(0,0,0,0.3)" }}
-      >
-        ← Back
-      </motion.button>
+  const handleIslandComplete = useCallback(() => {
+    navigate("/app");
+  }, [navigate]);
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-[340px]"
-      >
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-[28px] font-bold tracking-tight mb-1"
-            style={{ color: "var(--accent-color, #e8a0b4)", letterSpacing: "-0.02em" }}
+  if (phase === "welcome") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="text-center">
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+            className="text-2xl font-serif mb-2" style={{ color: "var(--accent-color, #e8a0b4)" }}
           >
-            Shundori
+            Welcome to your world.
+          </motion.h1>
+          <motion.div initial={{ width: 0 }} animate={{ width: "120px" }} transition={{ duration: 1, delay: 0.5 }}
+            className="h-0.5 mx-auto mt-4 rounded-full" style={{ background: "var(--accent-color, #e8a0b4)" }}
+          />
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (phase === "island") {
+    return <DynamicIsland onComplete={handleIslandComplete} />;
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center px-6">
+      <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
+        onClick={() => navigate("/")}
+        className="absolute top-12 left-6 text-foreground/40 hover:text-foreground/70 transition-colors cursor-pointer text-sm"
+      >← Back</motion.button>
+
+      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}
+        className="w-full max-w-sm"
+      >
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-serif mb-2" style={{ color: "var(--accent-color, #e8a0b4)" }}>
+            Welcome, {appData.appName}.
           </h1>
-          <p className="text-xs" style={{ color: "rgba(0,0,0,0.35)", fontWeight: 500 }}>Sign in</p>
-          <p className="text-[11px] mt-1" style={{ color: "rgba(0,0,0,0.25)" }}>
-            Enter your details to continue.
-          </p>
+          <p className="text-foreground/50 text-sm italic">"Only you know the way in."</p>
         </div>
 
-        {/* Form */}
-        <motion.form
-          onSubmit={handleSubmit}
-          animate={shake ? { x: [-8, 8, -6, 6, -3, 3, 0] } : {}}
-          transition={{ duration: 0.3 }}
-          className="space-y-3"
+        <motion.form onSubmit={handleSubmit} animate={shake ? { x: [-12, 12, -8, 8, -4, 4, 0] } : {}}
+          transition={{ duration: 0.4 }} className="space-y-5"
         >
-          {/* Name */}
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
-            style={{ background: "rgba(0,0,0,0.04)" }}
-          >
-            <User className="w-4 h-4 shrink-0" style={{ color: "rgba(0,0,0,0.2)" }} />
-            <input
-              type="text"
-              placeholder="Name"
-              value={name}
+          <div className="relative">
+            <input type="text" placeholder="Your name" value={name}
               onChange={(e) => { setName(e.target.value); setError(""); }}
-              className="flex-1 bg-transparent border-none outline-none text-sm"
-              style={{ color: "rgba(0,0,0,0.8)", fontFamily: "inherit" }}
+              className="w-full px-5 py-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/40 shadow-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-[var(--accent-color,#e8a0b4)]/40 transition-all text-base"
             />
           </div>
 
-          {/* Password */}
           <div className="relative">
-            <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
-              style={{ background: "rgba(0,0,0,0.04)" }}
-            >
-              <Lock className="w-4 h-4 shrink-0" style={{ color: "rgba(0,0,0,0.2)" }} />
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                value={password}
-                onChange={(e) => { setPassword(e.target.value); setError(""); }}
-                className="flex-1 bg-transparent border-none outline-none text-sm"
-                style={{ color: "rgba(0,0,0,0.8)", fontFamily: "inherit" }}
-              />
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); setShowCalendar(!showCalendar); }}
-                  className="p-1 cursor-pointer bg-transparent border-none"
-                  style={{ color: "rgba(0,0,0,0.2)" }}
-                >
-                  <CalendarDays className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="p-1 cursor-pointer bg-transparent border-none"
-                  style={{ color: "rgba(0,0,0,0.2)" }}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
+            <input type={showPassword ? "text" : "password"} placeholder="Password (hint: a special date)"
+              value={password} onChange={(e) => { setPassword(e.target.value); setError(""); }}
+              className="w-full px-5 py-4 pr-24 rounded-2xl bg-white/60 backdrop-blur-md border border-white/40 shadow-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-[var(--accent-color,#e8a0b4)]/40 transition-all text-base"
+            />
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+              <CalendarDays className="w-4 h-4 text-foreground/30" />
+              <button type="button" onClick={() => setShowPassword(!showPassword)}
+                className="p-1 text-foreground/40 hover:text-foreground/60 transition-colors cursor-pointer"
+              >{showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}</button>
             </div>
-
-            {/* Calendar picker */}
-            <AnimatePresence>
-              {showCalendar && (
-                <CalendarPicker
-                  onSelect={handleCalendarSelect}
-                  onClose={() => setShowCalendar(false)}
-                  accentColor="var(--accent-color, #e8a0b4)"
-                />
-              )}
-            </AnimatePresence>
           </div>
 
-          {/* Error */}
           <AnimatePresence>
             {error && (
-              <motion.p
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="text-xs text-center"
-                style={{ color: "#ef4444" }}
-              >
-                {error}
+              <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="text-sm text-red-400 text-center">{error}
               </motion.p>
             )}
           </AnimatePresence>
 
-          {/* Submit */}
-          <motion.button
-            type="submit"
-            disabled={!canSubmit || loading}
-            whileTap={canSubmit && !loading ? { scale: 0.97 } : {}}
-            className="w-full py-3 rounded-xl text-white text-sm font-semibold cursor-pointer flex items-center justify-center gap-2 transition-all"
-            style={{
-              background: canSubmit ? "var(--accent-color, #e8a0b4)" : "rgba(0,0,0,0.08)",
-              color: canSubmit ? "#fff" : "rgba(0,0,0,0.2)",
-              letterSpacing: "0.01em",
-            }}
+          <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+            className="w-full py-4 rounded-2xl text-white font-semibold text-base shadow-lg cursor-pointer transition-all"
+            style={{ background: "var(--accent-color, #e8a0b4)" }}
           >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Signing in…
-              </>
-            ) : (
-              "Sign In"
-            )}
+            Enter your world
           </motion.button>
         </motion.form>
       </motion.div>

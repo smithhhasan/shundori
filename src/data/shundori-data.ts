@@ -1,17 +1,36 @@
+// Shundori — All customizable content lives here.
 export const LOGIN_NAME = "QUAZI ZARIN SUBAH";
 export const LOGIN_PASSWORD = "4May2003";
 
 export type ThemeName = "rose" | "pink" | "lavender" | "midnight" | "warm-white" | "soft-blue";
 export const DEFAULT_THEME: ThemeName = "rose";
 
+export function getShundoriIcon(): string {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("shundori-icon") || "✦";
+  }
+  return "✦";
+}
+
 export const THEMES: Record<ThemeName, { label: string; accent: string; bg: string; card: string; gradient: string }> = {
-  rose:         { label: "Rose",       accent: "#e8a0b4", bg: "#faf5f7", card: "#ffffff", gradient: "linear-gradient(135deg, #fce4ec, #f8bbd0, #f48fb1)" },
+  rose:         { label: "Rose",       accent: "#e8a0b4", bg: "#fef5f7", card: "#ffffff", gradient: "linear-gradient(135deg, #fce4ec, #f8bbd0, #f48fb1)" },
   pink:         { label: "Pink",       accent: "#f06292", bg: "#fce4ec", card: "#ffffff", gradient: "linear-gradient(135deg, #f8bbd0, #f48fb1, #ec407a)" },
   lavender:     { label: "Lavender",   accent: "#b39ddb", bg: "#f3e5f5", card: "#ffffff", gradient: "linear-gradient(135deg, #ede7f6, #d1c4e9, #b39ddb)" },
   midnight:     { label: "Midnight",   accent: "#90caf9", bg: "#1a1a2e", card: "#16213e", gradient: "linear-gradient(135deg, #0f3460, #1a1a2e, #533483)" },
   "warm-white": { label: "Warm White", accent: "#d4a574", bg: "#faf6f1", card: "#ffffff", gradient: "linear-gradient(135deg, #faf6f1, #f0e6d8, #d4a574)" },
   "soft-blue":  { label: "Soft Blue",  accent: "#81d4fa", bg: "#e3f2fd", card: "#ffffff", gradient: "linear-gradient(135deg, #e3f2fd, #bbdefb, #81d4fa)" },
 };
+
+export const NO_MESSAGES = [
+  "Are you sure?",
+  "Nice try.",
+  "Think again…",
+  "That's not the right answer.",
+  "You know the answer.",
+  "Come on, you want to.",
+  "That button doesn't work.",
+  "Try the other one.",
+];
 
 export interface Photo { id: number; src: string; caption: string; date: string; }
 export interface Memory { id: number; title: string; description: string; date: string; emoji: string; }
@@ -23,11 +42,24 @@ export const appData = {
   appName: "Shundori",
   personName: "QUAZI ZARIN SUBAH",
 
+  welcomeMessages: [
+    "Some souls enter quietly,",
+    "and make everything beautiful.",
+    "",
+    "This was made for someone",
+    "who means more than words",
+    "can ever say.",
+  ],
+
+  homeQuote: "I'm glad you exist.",
+
   memories: [
-    { id: 1, title: "First Chapter", description: "Some moments quietly become important.", date: "May 2023", emoji: "🌸" },
-    { id: 2, title: "Under the Stars", description: "That night we talked until morning.", date: "Jul 2023", emoji: "🌙" },
-    { id: 3, title: "The Little Things", description: "It was never about the big moments.", date: "Sep 2023", emoji: "✨" },
-    { id: 4, title: "Us", description: "Two people. One story.", date: "May 2024", emoji: "🦋" },
+    { id: 1, title: "That Day", description: "Some moments don't need a reason to stay.", date: "2024-01-15", emoji: "🌸" },
+    { id: 2, title: "A Favorite Memory", description: "One of those days I'd choose to remember again.", date: "2024-02-14", emoji: "💕" },
+    { id: 3, title: "The Little Things", description: "It was never about the big moments.", date: "2024-03-20", emoji: "✨" },
+    { id: 4, title: "Us", description: "Two people. One story.", date: "2024-05-04", emoji: "🦋" },
+    { id: 5, title: "Under the Stars", description: "That night we talked until morning.", date: "2024-07-10", emoji: "🌙" },
+    { id: 6, title: "Always", description: "Some bonds don't need words.", date: "2024-08-15", emoji: "💫" },
   ] as Memory[],
 
   jhogra: [
@@ -35,6 +67,8 @@ export const appData = {
     { id: 2, title: "Who Was Actually Right?", description: "It was Google, actually.", emoji: "🤷" },
     { id: 3, title: "The Food Argument", description: "45 minutes deciding what to eat.", emoji: "🍕" },
     { id: 4, title: "Fine. You Win.", description: "The most dangerous three words.", emoji: "🏆" },
+    { id: 5, title: "The 'I'm Not Angry' Phase", description: "Translation: I am VERY angry.", emoji: "💢" },
+    { id: 6, title: "The Apology Dance", description: "Both wrong, nobody wants to go first.", emoji: "💃" },
   ] as Jhogra[],
 
   firstMeet: [
@@ -48,7 +82,8 @@ export const appData = {
     { id: 1, title: "A Letter", message: "Every moment with you is a gift.", emoji: "💌" },
     { id: 2, title: "A Surprise", message: "This whole app is just for you.", emoji: "🎁" },
     { id: 3, title: "Something Simple", message: "You make the world better by being in it.", emoji: "🌸" },
+    { id: 4, title: "One More Thing", message: "You deserve all the good things.", emoji: "⭐" },
   ] as Gift[],
 
-  landMessage: "Some names deserve a place of their own.",
+  landMessage: "Some names deserve the world.",
 };
