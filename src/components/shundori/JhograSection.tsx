@@ -18,16 +18,19 @@ export default function JhograSection() {
   const [editId, setEditId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDesc, setEditDesc] = useState("");
+  const [date, setDate] = useState("");
+  const [editDate, setEditDate] = useState("");
 
   const viewing = viewId !== null ? items.find((j) => j.id === viewId) : null;
 
   const add = () => {
     if (!title.trim()) return;
-    const j: Jhogra = { id: Date.now(), title: title.trim(), description: desc.trim(), emoji: "💬" };
+    const dateStr = date.trim() || new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    const j: Jhogra = { id: Date.now(), title: title.trim(), description: desc.trim(), emoji: "💬", date: dateStr };
     const next = [...items, j];
     setItems(next);
     saveAll(next);
-    setTitle(""); setDesc(""); setShowAdd(false);
+    setTitle(""); setDesc(""); setDate(""); setShowAdd(false);
   };
 
   const remove = (id: number) => {
@@ -37,10 +40,10 @@ export default function JhograSection() {
     setViewId(null);
   };
 
-  const startEdit = (j: Jhogra) => { setEditId(j.id); setEditTitle(j.title); setEditDesc(j.description); };
+  const startEdit = (j: Jhogra) => { setEditId(j.id); setEditTitle(j.title); setEditDesc(j.description); setEditDate(j.date); };
   const saveEdit = () => {
     if (editId === null) return;
-    const next = items.map((j) => j.id === editId ? { ...j, title: editTitle, description: editDesc } : j);
+    const next = items.map((j) => j.id === editId ? { ...j, title: editTitle, description: editDesc, date: editDate || j.date } : j);
     setItems(next);
     saveAll(next);
     setEditId(null);
@@ -69,6 +72,7 @@ export default function JhograSection() {
         <div className="p-5 rounded-2xl overflow-hidden" style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}>
           <div className="flex items-center gap-3 mb-4">
             <span className="text-2xl">{viewing.emoji}</span>
+            <p className="text-[10px]" style={{ color: isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)" }}>{viewing.date}</p>
           </div>
 
           {isEditing ? (
@@ -78,6 +82,9 @@ export default function JhograSection() {
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <textarea value={editDesc} onChange={(e) => setEditDesc(e.target.value)} rows={6}
                 className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none resize-none"
+                style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
+              <input type="text" placeholder="Date" value={editDate} onChange={(e) => setEditDate(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <div className="flex gap-2">
                 <button onClick={saveEdit} className="flex-1 py-2.5 rounded-xl text-white text-sm font-semibold cursor-pointer border-none"
@@ -116,6 +123,9 @@ export default function JhograSection() {
                 className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <input type="text" placeholder="What happened?" value={desc} onChange={(e) => setDesc(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
+                style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
+              <input type="text" placeholder="Date (e.g. 15 Jan 2024)" value={date} onChange={(e) => setDate(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <button onClick={add} className="w-full py-2.5 rounded-xl text-white text-sm font-semibold cursor-pointer border-none"

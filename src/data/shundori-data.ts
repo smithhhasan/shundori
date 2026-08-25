@@ -32,9 +32,9 @@ export const NO_MESSAGES = [
 
 export interface Photo { id: number; src: string; caption: string; date: string; }
 export interface Memory { id: number; title: string; description: string; date: string; emoji: string; }
-export interface Jhogra { id: number; title: string; description: string; emoji: string; }
+export interface Jhogra { id: number; title: string; description: string; emoji: string; date: string; }
 export interface FirstMeetItem { id: number; title: string; date: string; description: string; }
-export interface Gift { id: number; title: string; message: string; emoji: string; }
+export interface Gift { id: number; title: string; message: string; emoji: string; date: string; }
 
 export const appData = {
   appName: "Shundori",

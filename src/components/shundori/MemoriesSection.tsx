@@ -18,16 +18,19 @@ export default function MemoriesSection() {
   const [editId, setEditId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDesc, setEditDesc] = useState("");
+  const [date, setDate] = useState("");
+  const [editDate, setEditDate] = useState("");
 
   const viewing = viewId !== null ? memories.find((m) => m.id === viewId) : null;
 
   const add = () => {
     if (!title.trim()) return;
-    const m: Memory = { id: Date.now(), title: title.trim(), description: desc.trim(), date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }), emoji: "✨" };
+    const dateStr = date.trim() || new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    const m: Memory = { id: Date.now(), title: title.trim(), description: desc.trim(), date: dateStr, emoji: "✨" };
     const next = [...memories, m];
     setMemories(next);
     saveAll(next);
-    setTitle(""); setDesc(""); setShowAdd(false);
+    setTitle(""); setDesc(""); setDate(""); setShowAdd(false);
   };
 
   const remove = (id: number) => {
@@ -37,10 +40,10 @@ export default function MemoriesSection() {
     setViewId(null);
   };
 
-  const startEdit = (m: Memory) => { setEditId(m.id); setEditTitle(m.title); setEditDesc(m.description); };
+  const startEdit = (m: Memory) => { setEditId(m.id); setEditTitle(m.title); setEditDesc(m.description); setEditDate(m.date); };
   const saveEdit = () => {
     if (editId === null) return;
-    const next = memories.map((m) => m.id === editId ? { ...m, title: editTitle, description: editDesc } : m);
+    const next = memories.map((m) => m.id === editId ? { ...m, title: editTitle, description: editDesc, date: editDate || m.date } : m);
     setMemories(next);
     saveAll(next);
     setEditId(null);
@@ -80,6 +83,9 @@ export default function MemoriesSection() {
               <textarea value={editDesc} onChange={(e) => setEditDesc(e.target.value)} rows={6}
                 className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none resize-none"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
+              <input type="text" placeholder="Date" value={editDate} onChange={(e) => setEditDate(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
+                style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <div className="flex gap-2">
                 <button onClick={saveEdit} className="flex-1 py-2.5 rounded-xl text-white text-sm font-semibold cursor-pointer border-none"
                   style={{ background: "var(--accent-color, #d99aa3)" }}><Check className="w-4 h-4 inline mr-1" />Save</button>
@@ -117,6 +123,9 @@ export default function MemoriesSection() {
                 className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <input type="text" placeholder="Description" value={desc} onChange={(e) => setDesc(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
+                style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
+              <input type="text" placeholder="Date (e.g. 15 Jan 2024)" value={date} onChange={(e) => setDate(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <button onClick={add} className="w-full py-2.5 rounded-xl text-white text-sm font-semibold cursor-pointer border-none"

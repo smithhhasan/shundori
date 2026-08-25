@@ -18,16 +18,19 @@ export default function FirstMeetSection() {
   const [editId, setEditId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDesc, setEditDesc] = useState("");
+  const [date, setDate] = useState("");
+  const [editDate, setEditDate] = useState("");
 
   const viewing = viewId !== null ? items.find((item) => item.id === viewId) : null;
 
   const add = () => {
     if (!title.trim()) return;
-    const item: FirstMeetItem = { id: Date.now(), title: title.trim(), date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }), description: desc.trim() };
+    const dateStr = date.trim() || new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    const item: FirstMeetItem = { id: Date.now(), title: title.trim(), date: dateStr, description: desc.trim() };
     const next = [...items, item];
     setItems(next);
     saveAll(next);
-    setTitle(""); setDesc(""); setShowAdd(false);
+    setTitle(""); setDesc(""); setDate(""); setShowAdd(false);
   };
 
   const remove = (id: number) => {
@@ -37,10 +40,10 @@ export default function FirstMeetSection() {
     setViewId(null);
   };
 
-  const startEdit = (item: FirstMeetItem) => { setEditId(item.id); setEditTitle(item.title); setEditDesc(item.description); };
+  const startEdit = (item: FirstMeetItem) => { setEditId(item.id); setEditTitle(item.title); setEditDesc(item.description); setEditDate(item.date); };
   const saveEdit = () => {
     if (editId === null) return;
-    const next = items.map((item) => item.id === editId ? { ...item, title: editTitle, description: editDesc } : item);
+    const next = items.map((item) => item.id === editId ? { ...item, title: editTitle, description: editDesc, date: editDate || item.date } : item);
     setItems(next);
     saveAll(next);
     setEditId(null);
@@ -76,6 +79,9 @@ export default function FirstMeetSection() {
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <textarea value={editDesc} onChange={(e) => setEditDesc(e.target.value)} rows={6}
                 className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none resize-none"
+                style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
+              <input type="text" placeholder="Date" value={editDate} onChange={(e) => setEditDate(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <div className="flex gap-2">
                 <button onClick={saveEdit} className="flex-1 py-2.5 rounded-xl text-white text-sm font-semibold cursor-pointer border-none"
@@ -114,6 +120,9 @@ export default function FirstMeetSection() {
                 className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <input type="text" placeholder="Description" value={desc} onChange={(e) => setDesc(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
+                style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
+              <input type="text" placeholder="Date (e.g. Jan 2023)" value={date} onChange={(e) => setDate(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl text-sm border-none outline-none"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }} />
               <button onClick={add} className="w-full py-2.5 rounded-xl text-white text-sm font-semibold cursor-pointer border-none"
