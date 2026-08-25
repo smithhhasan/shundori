@@ -116,8 +116,9 @@ export default function PhoneHomeScreen({ onToggleDark, isDark }: Props) {
   return (
     <div className="min-h-full flex flex-col relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: isDark ? "linear-gradient(180deg, #0a0a1a 0%, #1a0a2e 40%, #0d1b2a 100%)" : "linear-gradient(180deg, #e0ecff 0%, #b8d4f0 30%, #d4b8e8 60%, #f0d4e8 100%)",
-        opacity: 0.35,
+        background: isDark
+          ? "linear-gradient(170deg, #1a1a2e 0%, #16213e 20%, #0f3460 45%, #533483 70%, #1a1a2e 100%)"
+          : "linear-gradient(170deg, #fdf2f8 0%, #fbcfe8 15%, #f9a8d4 30%, #c4b5fd 50%, #93c5fd 70%, #a5f3fc 85%, #fdf2f8 100%)",
       }} />
 
       {/* Status bar */}
