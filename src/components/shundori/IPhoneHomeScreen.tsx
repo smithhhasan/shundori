@@ -47,6 +47,47 @@ function addRecent(id: string): string[] {
   saveRecent(next);
   return next;
 }
+function removeRecent(id: string): string[] {
+  const prev = loadRecent();
+  const next = prev.filter((x) => x !== id);
+  saveRecent(next);
+  return next;
+}
+
+function SwipeToDismiss({ children, onDismiss, prefersReduced }: { children: React.ReactNode; onDismiss: () => void; prefersReduced: boolean }) {
+  const x = useRef(0);
+  const [offset, setOffset] = useState(0);
+  const [gone, setGone] = useState(false);
+
+  const handleDragEnd = (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
+    if (Math.abs(info.offset.x) > 100 || Math.abs(info.velocity.x) > 500) {
+      setGone(true);
+      setTimeout(onDismiss, 300);
+    } else {
+      setOffset(0);
+    }
+  };
+
+  if (prefersReduced) {
+    return <div onDoubleClick={onDismiss}>{children}</div>;
+  }
+
+  return (
+    <AnimatePresence>
+      {!gone && (
+        <motion.div
+          drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.5}
+          onDragEnd={handleDragEnd}
+          initial={{ opacity: 1, x: 0 }}
+          animate={{ opacity: 1, x: offset }}
+          exit={{ opacity: 0, x: -120, scale: 0.8, transition: { duration: 0.25 } }}
+          style={{ touchAction: "pan-y" }}>
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
 
 export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Props) {
   const navigate = useNavigate();
@@ -185,20 +226,21 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
           </div>
         </div>
 
-        {/* Recently Opened — 4 apps max */}
+        {/* Recently Opened — icons only, swipe to dismiss */}
         {recentApps.length > 0 && (
           <div className="mb-6 px-1">
             <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}>Recently Opened</p>
             <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
               {recentApps.map((app) => (
-                <motion.button key={app.id} whileTap={prefersReduced ? {} : { scale: 0.9 }} onClick={() => openSection(app)}
-                  className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl shrink-0 cursor-pointer transition-all bg-transparent border-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-color)]"
-                  aria-label={`Open ${app.label}`}>
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: app.gradient }}>
-                    <span className="scale-[0.5]">{app.icon}</span>
-                  </div>
-                  <span className="text-xs font-medium" style={{ color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)" }}>{app.label}</span>
-                </motion.button>
+                <SwipeToDismiss key={app.id} onDismiss={() => setRecentIds(removeRecent(app.id))} prefersReduced={prefersReduced}>
+                  <motion.button whileTap={prefersReduced ? {} : { scale: 0.9 }} onClick={() => openSection(app)}
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 cursor-pointer bg-transparent border-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-color)]"
+                    aria-label={`Open ${app.label}`}>
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: app.gradient }}>
+                      <span className="scale-[0.55]">{app.icon}</span>
+                    </div>
+                  </motion.button>
+                </SwipeToDismiss>
               ))}
             </div>
           </div>
