@@ -21,6 +21,7 @@ export default function Welcome() {
   const [noClicks, setNoClicks] = useState(0);
   const [noPos, setNoPos] = useState(INITIAL_NO_POS);
   const [message, setMessage] = useState("");
+  const [buttonsGone, setButtonsGone] = useState(false);
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase(1), 800);
@@ -32,6 +33,10 @@ export default function Welcome() {
   const moveNoButton = useCallback(() => {
     const next = noClicks + 1;
     setNoClicks(next);
+    if (next >= 5) {
+      setButtonsGone(true);
+      return;
+    }
     if (next > 1 && next <= NO_MESSAGES.length + 1) {
       setMessage(NO_MESSAGES[Math.min(next - 2, NO_MESSAGES.length - 1)]);
     }
@@ -97,8 +102,8 @@ export default function Welcome() {
       </div>
 
       <AnimatePresence>
-        {showButtons && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}
+        {showButtons && !buttonsGone && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} transition={{ duration: 0.6 }}
             className="flex flex-col items-center gap-6"
           >
             <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.25rem", fontWeight: 500, fontStyle: "italic", color: "rgba(0,0,0,0.6)" }}>
@@ -129,6 +134,17 @@ export default function Welcome() {
                 </motion.p>
               )}
             </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {buttonsGone && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-center">
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "1rem", fontStyle: "italic", color: "rgba(0,0,0,0.35)" }}>
+              Maybe next time…
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
