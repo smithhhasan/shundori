@@ -21,7 +21,7 @@ export default function Welcome() {
   const [noClicks, setNoClicks] = useState(0);
   const [noPos, setNoPos] = useState(INITIAL_NO_POS);
   const [message, setMessage] = useState("");
-  const [buttonsGone, setButtonsGone] = useState(false);
+  const [noGone, setNoGone] = useState(false);
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase(1), 800);
@@ -34,7 +34,7 @@ export default function Welcome() {
     const next = noClicks + 1;
     setNoClicks(next);
     if (next >= 1) {
-      setButtonsGone(true);
+      setNoGone(true);
       return;
     }
     if (next > 1 && next <= NO_MESSAGES.length + 1) {
@@ -102,8 +102,8 @@ export default function Welcome() {
       </div>
 
       <AnimatePresence>
-        {showButtons && !buttonsGone && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} transition={{ duration: 0.6 }}
+        {showButtons && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}
             className="flex flex-col items-center gap-6"
           >
             <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.25rem", fontWeight: 500, fontStyle: "italic", color: "rgba(0,0,0,0.6)" }}>
@@ -116,14 +116,19 @@ export default function Welcome() {
               >
                 YES
               </motion.button>
-              <motion.button animate={{ x: noPos.x, y: noPos.y, scale: [1, 1.04, 1] }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                whileHover={{ scale: 1.04 }}
-                onClick={moveNoButton}
-                style={{ fontFamily: "'DM Sans', sans-serif", background: "transparent", color: "rgba(0,0,0,0.35)", fontWeight: 600, fontSize: "1rem", padding: "0.75rem 2.5rem", borderRadius: "9999px", border: "2px solid rgba(0,0,0,0.12)", cursor: "pointer" }}
-              >
-                NO
-              </motion.button>
+              <AnimatePresence>
+                {!noGone && (
+                  <motion.button animate={{ x: noPos.x, y: noPos.y, scale: [1, 1.04, 1] }}
+                    exit={{ opacity: 0, scale: 0.5, x: 100 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                    whileHover={{ scale: 1.04 }}
+                    onClick={moveNoButton}
+                    style={{ fontFamily: "'DM Sans', sans-serif", background: "transparent", color: "rgba(0,0,0,0.35)", fontWeight: 600, fontSize: "1rem", padding: "0.75rem 2.5rem", borderRadius: "9999px", border: "2px solid rgba(0,0,0,0.12)", cursor: "pointer" }}
+                  >
+                    NO
+                  </motion.button>
+                )}
+              </AnimatePresence>
             </div>
             <AnimatePresence>
               {message && (
@@ -139,11 +144,11 @@ export default function Welcome() {
       </AnimatePresence>
 
       <AnimatePresence>
-        {buttonsGone && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-center">
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "1rem", fontStyle: "italic", color: "rgba(0,0,0,0.35)" }}>
-              Maybe next time…
+        {noGone && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center -mt-2">
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.875rem", fontStyle: "italic", color: "rgba(0,0,0,0.3)" }}>
+              Smart choice.
             </p>
           </motion.div>
         )}
