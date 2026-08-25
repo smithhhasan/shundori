@@ -8,8 +8,8 @@ import DynamicIsland from "@/components/shundori/DynamicIsland";
 function normalizeDate(s: string): string {
   const trimmed = s.trim();
   if (trimmed === LOGIN_PASSWORD) return LOGIN_PASSWORD;
-  const stripped = trimmed.replace(/[\/\-.\s]/g, "").toLowerCase();
-  const target = LOGIN_PASSWORD.replace(/[\/\-.\s]/g, "").toLowerCase();
+  const stripped = trimmed.replace(/[^\w]/g, "").toLowerCase();
+  const target = LOGIN_PASSWORD.replace(/[^\w]/g, "").toLowerCase();
   return stripped === target ? LOGIN_PASSWORD : trimmed;
 }
 
@@ -185,7 +185,6 @@ function CalendarPickerInline({ onSelect, onClose, accentColor }: {
   const selectDay = (day: number) => {
     const d = new Date(year, month, day);
     setSelected(d);
-    const monthShort = MONTHS[d.getMonth()].slice(0, 3);
     onSelect(`${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`);
   };
 

@@ -5,6 +5,15 @@ import { appData, NO_MESSAGES } from "@/data/shundori-data";
 
 const INITIAL_NO_POS = { x: 0, y: 0 };
 
+// Pre-compute random particle positions to avoid impure render
+const PARTICLES = [...Array(12)].map((_, i) => ({
+  id: i,
+  symbol: ["✦", "♡", "✧", "❋", "♦", "❀"][i % 6],
+  x1: 10 + (((i * 37 + 13) % 80)),
+  x2: 10 + (((i * 53 + 7) % 80)),
+  duration: 12 + (i * 3 % 10),
+}));
+
 export default function Welcome() {
   const navigate = useNavigate();
   const [phase, setPhase] = useState(0);
@@ -41,13 +50,13 @@ export default function Welcome() {
       style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(12)].map((_, i) => (
-          <motion.div key={i} className="absolute text-lg opacity-10"
-            initial={{ y: "110vh", x: `${10 + Math.random() * 80}%` }}
-            animate={{ y: "-10vh", x: `${10 + Math.random() * 80}%`, rotate: [0, 360] }}
-            transition={{ duration: 12 + Math.random() * 10, repeat: Infinity, delay: i * 1.5, ease: "linear" }}
+        {PARTICLES.map((p) => (
+          <motion.div key={p.id} className="absolute text-lg opacity-10"
+            initial={{ y: "110vh", x: `${p.x1}%` }}
+            animate={{ y: "-10vh", x: `${p.x2}%`, rotate: [0, 360] }}
+            transition={{ duration: p.duration, repeat: Infinity, delay: p.id * 1.5, ease: "linear" }}
           >
-            {["✦", "♡", "✧", "❋", "♦", "❀"][i % 6]}
+            {p.symbol}
           </motion.div>
         ))}
       </div>

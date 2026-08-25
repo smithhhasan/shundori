@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Image, Heart, MessageCircle, Clock, Gift, MapPin, Settings, Cloud, Moon, Sun, LogOut, Search, X, Calendar } from "lucide-react";
 import { useNavigate } from "react-router";
-import { THEMES, type ThemeName, appData, STORAGE, FIRST_MEET_DATE } from "@/data/shundori-data";
+import { type ThemeName, appData, STORAGE, FIRST_MEET_DATE } from "@/data/shundori-data";
 
 interface Props { onLogout: () => void; onToggleDark: () => void; isDark: boolean; currentTheme: ThemeName; onThemeChange: (t: ThemeName) => void; }
 

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { appData } from "@/data/shundori-data";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 const particles = Array.from({ length: 20 }, (_, i) => ({
   id: i, char: ["♡", "✦", "✧", "❋", "❀", "⭐"][i % 6], x: Math.random() * 100,
@@ -8,12 +8,11 @@ const particles = Array.from({ length: 20 }, (_, i) => ({
 }));
 
 export default function HomeSection() {
-  const [greeting, setGreeting] = useState("");
-  useEffect(() => {
+  const greeting = useMemo(() => {
     const h = new Date().getHours();
-    if (h < 12) setGreeting("Good morning");
-    else if (h < 18) setGreeting("Good afternoon");
-    else setGreeting("Good evening");
+    if (h < 12) return "Good morning";
+    if (h < 18) return "Good afternoon";
+    return "Good evening";
   }, []);
 
   return (

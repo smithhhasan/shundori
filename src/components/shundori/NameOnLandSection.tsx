@@ -2,6 +2,15 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { appData } from "@/data/shundori-data";
 
+// Pre-computed star positions
+const STARS = [...Array(25)].map((_, i) => ({
+  id: i,
+  size: 1 + ((i * 7 + 3) % 3),
+  x: (i * 37 + 11) % 100,
+  y: (i * 23 + 5) % 35,
+  opacity: 0.3 + ((i * 13) % 5) * 0.08,
+}));
+
 export default function NameOnLandSection() {
   const isDark = localStorage.getItem("shundori-dark") === "true";
   const ref = useRef<HTMLDivElement>(null);
@@ -26,12 +35,12 @@ export default function NameOnLandSection() {
               ? "linear-gradient(180deg, #0a0a2e 0%, #1a0a3e 25%, #e8a0b444 55%, #f48fb166 70%, #1a1a2e 100%)"
               : "linear-gradient(180deg, #1a1a3e 0%, #2d1b4e 25%, #e8a0b466 55%, #f48fb188 70%, #fef5f7 100%)",
           }} />
-          {/* Stars */}
-          {[...Array(25)].map((_, i) => (
-            <div key={i} className="absolute rounded-full" style={{
-              width: 1 + Math.random() * 2, height: 1 + Math.random() * 2,
-              left: `${Math.random() * 100}%`, top: `${Math.random() * 35}%`,
-              background: "#fff", opacity: 0.3 + Math.random() * 0.4,
+          {/* Stars — pre-computed positions */}
+          {STARS.map((s) => (
+            <div key={s.id} className="absolute rounded-full" style={{
+              width: s.size, height: s.size,
+              left: `${s.x}%`, top: `${s.y}%`,
+              background: "#fff", opacity: s.opacity,
             }} />
           ))}
         </motion.div>

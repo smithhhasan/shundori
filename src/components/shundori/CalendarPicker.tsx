@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 
 interface Props {
   onSelect: (dateStr: string) => void;
@@ -23,7 +23,6 @@ export default function CalendarPicker({ onSelect, onClose, accentColor = "#e8a0
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   const prevMonth = () => setViewDate(new Date(year, month - 1, 1));
-  const nextMonth = () => setViewDate(new Date(year, month + 1, 1));
 
   const selectDay = (day: number) => {
     const d = new Date(year, month, day);

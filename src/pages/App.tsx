@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router";
-import { THEMES, type ThemeName, appData, DEFAULT_THEME, STORAGE, FIRST_MEET_DATE } from "@/data/shundori-data";
+import { THEMES, type ThemeName, appData, DEFAULT_THEME, STORAGE } from "@/data/shundori-data";
 import { PersistentIsland } from "@/components/shundori/DynamicIsland";
 import PhoneHomeScreen from "@/components/shundori/IPhoneHomeScreen";
 import HomeSection from "@/components/shundori/HomeSection";
@@ -35,7 +35,7 @@ export default function ShundoriApp() {
   const [customName, setCustomName] = useState(() => localStorage.getItem(STORAGE.appName) || appData.appName);
   const [isDark, setIsDark] = useState(() => localStorage.getItem(STORAGE.darkMode) === "true");
   const [sessionTimeout, setSessionTimeout] = useState(() => parseInt(localStorage.getItem("shundori:sessionTimeout") || "0", 10));
-  const lastActivity = useRef(Date.now());
+  const lastActivity = useRef(0);
 
   const isHomePage = location.pathname === "/app" || location.pathname === "/app/";
   const isSubPage = !isHomePage && location.pathname.startsWith("/app/");
@@ -44,6 +44,9 @@ export default function ShundoriApp() {
   useEffect(() => {
     if (!localStorage.getItem(STORAGE.auth)) navigate("/", { replace: true });
   }, [navigate]);
+
+  // Initialize lastActivity on mount
+  useEffect(() => { lastActivity.current = Date.now(); }, []);
 
   // Session timeout
   useEffect(() => {

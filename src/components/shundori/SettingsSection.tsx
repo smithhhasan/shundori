@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { THEMES, type ThemeName, appData, STORAGE } from "@/data/shundori-data";
-import { Palette, Type, Sun, Moon, RotateCcw, LogOut, Lock, Clock, Download } from "lucide-react";
+import { Palette, Type, Sun, Moon, RotateCcw, Lock, Clock, Download } from "lucide-react";
 
 interface Props {
   currentTheme: ThemeName; onThemeChange: (t: ThemeName) => void;
@@ -17,7 +17,8 @@ export default function SettingsSection({
 }: Props) {
   const [editingName, setEditingName] = useState(false);
   const [nameVal, setNameVal] = useState(customName);
-  useEffect(() => setNameVal(customName), [customName]);
+  // Sync nameVal when customName prop changes
+  if (nameVal !== customName && !editingName) setNameVal(customName);
 
   const bg = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)";
   const border = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";

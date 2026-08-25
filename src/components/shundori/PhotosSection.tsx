@@ -1,13 +1,13 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Heart, Plus, Trash2, Camera } from "lucide-react";
+import { X, Heart, Trash2, Camera } from "lucide-react";
 import { type Photo } from "@/data/shundori-data";
 
 import { STORAGE } from "@/data/shundori-data";
 const STORAGE_KEY = STORAGE.photos;
 const FAV_KEY = STORAGE.favorites;
 
-function loadSavedPhotos(): Photo[] { try { const s = localStorage.getItem(STORAGE_KEY); if (s) return JSON.parse(s); } catch {} return []; }
+function loadSavedPhotos(): Photo[] { try { const s = localStorage.getItem(STORAGE_KEY); if (s) return JSON.parse(s); } catch { /* ignore parse errors */ } return []; }
 function savePhotos(photos: Photo[]) { localStorage.setItem(STORAGE_KEY, JSON.stringify(photos)); }
 function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result as string); reader.onerror = reject; reader.readAsDataURL(file); });
@@ -22,14 +22,15 @@ export default function PhotosSection() {
 
   const toggleFav = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    setFavorites((prev) => { const next = new Set(prev); next.has(id) ? next.delete(id) : next.add(id); localStorage.setItem(FAV_KEY, JSON.stringify([...next])); return next; });
+    setFavorites((prev) => { const next = new Set(prev); if (next.has(id)) next.delete(id); else next.add(id); localStorage.setItem(FAV_KEY, JSON.stringify([...next])); return next; });
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files; if (!files || files.length === 0) return;
     const results = await Promise.all(Array.from(files).map(async (file) => {
       const src = await readFileAsDataUrl(file);
-      return { id: Date.now() + Math.random(), src, caption: file.name.replace(/\.[^.]+$/, ""), date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) } satisfies Photo;
+      const photo: Photo = { id: Date.now() + Math.random(), src, caption: file.name.replace(/\.[^.]+$/, ""), date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) };
+      return photo;
     }));
     setPhotos((prev) => { const next = [...prev, ...results]; savePhotos(next); return next; });
     if (fileInputRef.current) fileInputRef.current.value = "";
