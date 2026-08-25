@@ -1,23 +1,17 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { THEMES, type ThemeName, appData, STORAGE } from "@/data/shundori-data";
-import { Palette, Type, Sun, Moon, RotateCcw, Lock, Clock, Download } from "lucide-react";
+import { Palette, Type, Sun, Moon, RotateCcw } from "lucide-react";
 
 interface Props {
   currentTheme: ThemeName; onThemeChange: (t: ThemeName) => void;
   customName: string; onNameChange: (n: string) => void; onReset: () => void;
   isDark: boolean; onToggleDark: () => void;
-  onReLock: () => void; sessionTimeout: number; onSessionTimeoutChange: (m: number) => void;
-  onExport: () => void;
 }
 
-export default function SettingsSection({
-  currentTheme, onThemeChange, customName, onNameChange, onReset,
-  isDark, onToggleDark, onReLock, sessionTimeout, onSessionTimeoutChange, onExport,
-}: Props) {
+export default function SettingsSection({ currentTheme, onThemeChange, customName, onNameChange, onReset, isDark, onToggleDark }: Props) {
   const [editingName, setEditingName] = useState(false);
   const [nameVal, setNameVal] = useState(customName);
-  // Sync nameVal when customName prop changes
   if (nameVal !== customName && !editingName) setNameVal(customName);
 
   const bg = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)";
@@ -29,8 +23,7 @@ export default function SettingsSection({
     <div className="px-5 pt-2 pb-4 space-y-4">
       {/* Night Mode */}
       <Section bg={bg} border={border}>
-        <button onClick={onToggleDark} className="w-full flex items-center justify-between py-3 px-0 cursor-pointer bg-transparent border-none"
-          aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}>
+        <button onClick={onToggleDark} className="w-full flex items-center justify-between py-3 px-0 cursor-pointer bg-transparent border-none">
           <div className="flex items-center gap-3">
             {isDark ? <Moon className="w-4 h-4 text-indigo-400" /> : <Sun className="w-4 h-4 text-yellow-500" />}
             <span className="text-sm font-medium" style={{ color: text }}>Night Mode</span>
@@ -100,46 +93,6 @@ export default function SettingsSection({
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}>{icon}</button>
             ))}
           </div>
-        </div>
-      </Section>
-
-      {/* Security */}
-      <Section bg={bg} border={border}>
-        <div className="px-0 py-2 space-y-3">
-          <p className="text-xs font-medium" style={{ color: sub }}>Security</p>
-
-          <button onClick={onReLock}
-            className="w-full flex items-center gap-3 py-2 cursor-pointer bg-transparent border-none">
-            <Lock className="w-4 h-4" style={{ color: "var(--accent-color, #d99aa3)" }} />
-            <span className="text-sm" style={{ color: text }}>Re-lock now</span>
-          </button>
-
-          <div className="flex items-center justify-between py-2">
-            <div className="flex items-center gap-3">
-              <Clock className="w-4 h-4" style={{ color: "var(--accent-color, #d99aa3)" }} />
-              <span className="text-sm" style={{ color: text }}>Auto-lock timeout</span>
-            </div>
-            <select value={sessionTimeout} onChange={(e) => onSessionTimeoutChange(Number(e.target.value))}
-              className="text-xs px-2 py-1 rounded-lg border-none outline-none cursor-pointer"
-              style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: text }}>
-              <option value={0}>Off</option>
-              <option value={5}>5 min</option>
-              <option value={15}>15 min</option>
-              <option value={30}>30 min</option>
-            </select>
-          </div>
-        </div>
-      </Section>
-
-      {/* Data */}
-      <Section bg={bg} border={border}>
-        <div className="px-0 py-2">
-          <p className="text-xs font-medium mb-2" style={{ color: sub }}>Data</p>
-          <button onClick={onExport}
-            className="w-full flex items-center gap-3 py-2 cursor-pointer bg-transparent border-none">
-            <Download className="w-4 h-4" style={{ color: "var(--accent-color, #d99aa3)" }} />
-            <span className="text-sm" style={{ color: text }}>Export backup</span>
-          </button>
         </div>
       </Section>
 

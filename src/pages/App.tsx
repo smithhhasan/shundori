@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router";
 import { THEMES, type ThemeName, appData, DEFAULT_THEME, STORAGE } from "@/data/shundori-data";
-import { PersistentIsland } from "@/components/shundori/DynamicIsland";
 import PhoneHomeScreen from "@/components/shundori/IPhoneHomeScreen";
 import HomeSection from "@/components/shundori/HomeSection";
 import PhotosSection from "@/components/shundori/PhotosSection";
@@ -13,18 +12,6 @@ import GiftsSection from "@/components/shundori/GiftsSection";
 import NameOnLandSection from "@/components/shundori/NameOnLandSection";
 import SettingsSection from "@/components/shundori/SettingsSection";
 
-function getContextFromPath(pathname: string): string {
-  if (pathname === "/app/photos") return "Viewing: Photos";
-  if (pathname === "/app/memories") return "Viewing: Memories";
-  if (pathname === "/app/jhogra") return "Viewing: Jhogra";
-  if (pathname === "/app/first-meet") return "Viewing: First Meet";
-  if (pathname === "/app/gifts") return "Viewing: Gifts";
-  if (pathname === "/app/name-on-land") return "Viewing: Name on Land";
-  if (pathname === "/app/settings") return "Viewing: Settings";
-  if (pathname === "/app/more") return "Viewing: More";
-  return "";
-}
-
 export default function ShundoriApp() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -34,8 +21,6 @@ export default function ShundoriApp() {
   });
   const [customName, setCustomName] = useState(() => localStorage.getItem(STORAGE.appName) || appData.appName);
   const [isDark, setIsDark] = useState(() => localStorage.getItem(STORAGE.darkMode) === "true");
-  const [sessionTimeout, setSessionTimeout] = useState(() => parseInt(localStorage.getItem("shundori:sessionTimeout") || "0", 10));
-  const lastActivity = useRef(0);
 
   const isHomePage = location.pathname === "/app" || location.pathname === "/app/";
   const isSubPage = !isHomePage && location.pathname.startsWith("/app/");
@@ -45,54 +30,15 @@ export default function ShundoriApp() {
     if (!localStorage.getItem(STORAGE.auth)) navigate("/", { replace: true });
   }, [navigate]);
 
-  // Initialize lastActivity on mount
-  useEffect(() => { lastActivity.current = Date.now(); }, []);
-
-  // Session timeout
-  useEffect(() => {
-    if (sessionTimeout <= 0) return;
-    const check = setInterval(() => {
-      if (Date.now() - lastActivity.current > sessionTimeout * 60 * 1000) {
-        localStorage.removeItem(STORAGE.auth);
-        navigate("/", { replace: true });
-      }
-    }, 30000);
-    const reset = () => { lastActivity.current = Date.now(); };
-    window.addEventListener("mousemove", reset);
-    window.addEventListener("keydown", reset);
-    window.addEventListener("touchstart", reset);
-    return () => { clearInterval(check); window.removeEventListener("mousemove", reset); window.removeEventListener("keydown", reset); window.removeEventListener("touchstart", reset); };
-  }, [sessionTimeout, navigate]);
-
   const handleThemeChange = useCallback((t: ThemeName) => { setTheme(t); localStorage.setItem(STORAGE.theme, t); }, []);
   const handleNameChange = useCallback((n: string) => { setCustomName(n); localStorage.setItem(STORAGE.appName, n); }, []);
   const handleToggleDark = useCallback(() => { setIsDark((p) => { localStorage.setItem(STORAGE.darkMode, String(!p)); return !p; }); }, []);
   const handleReset = useCallback(() => {
     setTheme(DEFAULT_THEME); setCustomName(appData.appName); setIsDark(false);
     Object.values(STORAGE).forEach((k) => localStorage.removeItem(k));
-    localStorage.removeItem("shundori:sessionTimeout");
     window.location.reload();
   }, []);
   const handleLogout = useCallback(() => { localStorage.removeItem(STORAGE.auth); navigate("/"); }, [navigate]);
-  const handleReLock = useCallback(() => { localStorage.removeItem(STORAGE.auth); navigate("/"); }, [navigate]);
-  const handleSessionTimeoutChange = useCallback((minutes: number) => {
-    setSessionTimeout(minutes);
-    localStorage.setItem("shundori:sessionTimeout", String(minutes));
-  }, []);
-  const handleExport = useCallback(() => {
-    const data = {
-      photos: JSON.parse(localStorage.getItem(STORAGE.photos) || "[]"),
-      favorites: JSON.parse(localStorage.getItem(STORAGE.favorites) || "[]"),
-      recentApps: JSON.parse(localStorage.getItem(STORAGE.recentApps) || "[]"),
-      appName: localStorage.getItem(STORAGE.appName),
-      theme: localStorage.getItem(STORAGE.theme),
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "shundori-backup.json"; a.click();
-    URL.revokeObjectURL(url);
-  }, []);
 
   // Apply theme
   useEffect(() => {
@@ -123,9 +69,7 @@ export default function ShundoriApp() {
     if (p === "/app/name-on-land") return <NameOnLandSection />;
     if (p === "/app/settings") return (
       <SettingsSection currentTheme={theme} onThemeChange={handleThemeChange} customName={customName}
-        onNameChange={handleNameChange} onReset={handleReset} isDark={isDark} onToggleDark={handleToggleDark}
-        onReLock={handleReLock} sessionTimeout={sessionTimeout} onSessionTimeoutChange={handleSessionTimeoutChange}
-        onExport={handleExport} />
+        onNameChange={handleNameChange} onReset={handleReset} isDark={isDark} onToggleDark={handleToggleDark} />
     );
     if (p === "/app/more") return <MoreSection onNavigate={navigate} />;
     return <HomeSection />;
@@ -133,9 +77,6 @@ export default function ShundoriApp() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--bg-color)", color: isDark ? "#e0e0e0" : undefined, maxWidth: "480px", margin: "0 auto", position: "relative" }}>
-      {/* Persistent Dynamic Island */}
-      {isSubPage && <PersistentIsland context={getContextFromPath(location.pathname)} />}
-
       <main className="flex-1 overflow-y-auto pb-24">
         <AnimatePresence mode="wait">
           <motion.div key={location.pathname} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }}
