@@ -76,6 +76,18 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Shundori design tokens */
+  --plum-deep: #2a0f1f;
+  --rose-gold: #d99aa3;
+  --gold: #c9a15f;
+  --blush: #f2d9dc;
+  --ivory: #faf3ef;
+  --mauve: #8a5a67;
+  --accent-color: #d99aa3;
+  --bg-color: #fef5f7;
+  --card-color: #ffffff;
+  --app-label-color: rgba(0,0,0,0.75);
 }
 
 .dark {
@@ -110,6 +122,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  --app-label-color: rgba(255,255,255,0.85);
 }
 
 @layer base {
@@ -126,37 +140,27 @@
   }
 }
 
-/* Shundori design tokens */
-:root {
-  --plum-deep: #2a0f1f;
-  --rose-gold: #d99aa3;
-  --gold: #c9a15f;
-  --blush: #f2d9dc;
-  --ivory: #faf3ef;
-  --mauve: #8a5a67;
-  --accent-color: #d99aa3;
-  --bg-color: #fef5f7;
-  --card-color: #ffffff;
-  --app-label-color: rgba(0,0,0,0.75);
-}
-.dark {
-  --app-label-color: rgba(255,255,255,0.85);
+/* Font families — SF Pro system stack */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Focus-visible for keyboard accessibility */
 :focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
-  border-radius: 8px;
 }
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
+  border-radius: 8px;
 }
 
-/* Reduced motion */
+/* Reduced motion — override ALL transitions and animations */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -183,26 +187,12 @@ select:focus-visible {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Font families — SF Pro system stack */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 /* Glass morphism utility */
 .glass {
   background: rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-/* Smooth transitions for theme changes */
-* {
-  transition-property: background-color, border-color;
-  transition-timing-function: ease;
-  transition-duration: 0.3s;
 }
 
 /* Glass card utility — works in both light and dark modes */
@@ -237,12 +227,4 @@ body {
 }
 .dark .home-indicator {
   background: rgba(255,255,255,0.2);
-}
-
-/* iOS app label color */
-:root {
-  --app-label-color: rgba(0,0,0,0.75);
-}
-.dark {
-  --app-label-color: rgba(255,255,255,0.85);
 }
