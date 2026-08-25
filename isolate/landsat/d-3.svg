@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="280" viewBox="0 0 200 280">
+  <defs>
+    <linearGradient id="gd2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a4a5a"/>
+      <stop offset="50%" stop-color="#4a7a8a"/>
+      <stop offset="100%" stop-color="#7aaaba"/>
+    </linearGradient>
+    <pattern id="pd2" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="none"/>
+      <rect width="1" height="1" fill="rgba(0,0,0,0.05)"/>
+    </pattern>
+    <linearGradient id="ovd2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(0,0,0,0.1)"/>
+      <stop offset="50%" stop-color="rgba(0,0,0,0.35)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="280" rx="10" fill="url(#gd2)"/>
+  <rect width="200" height="280" rx="10" fill="url(#pd2)"/>
+  <rect width="200" height="280" rx="10" fill="url(#ovd2)"/>
+  <text x="100" y="145" text-anchor="middle" dominant-baseline="central"
+    font-family="Georgia, 'Times New Roman', serif" font-size="130" font-weight="bold"
+    fill="white" opacity="0.88" style="text-shadow:0 4px 24px rgba(0,0,0,0.5)">D</text>
+  <rect x="0" y="238" width="200" height="42" rx="0" fill="rgba(0,0,0,0.65)"/>
+  <text x="10" y="256" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">Manicouagan</text>
+  <text x="10" y="272" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="8" fill="rgba(255,255,255,0.5)">51°22'N · 68°40'W · Landsat 7</text>
+</svg>

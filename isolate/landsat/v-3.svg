@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="280" viewBox="0 0 200 280">
+  <defs>
+    <linearGradient id="gv2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3a5a4a"/>
+      <stop offset="50%" stop-color="#6a8a6a"/>
+      <stop offset="100%" stop-color="#9abaa0"/>
+    </linearGradient>
+    <pattern id="pv2" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="none"/>
+      <rect width="1" height="1" fill="rgba(0,0,0,0.05)"/>
+    </pattern>
+    <linearGradient id="ovv2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(0,0,0,0.1)"/>
+      <stop offset="50%" stop-color="rgba(0,0,0,0.35)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="280" rx="10" fill="url(#gv2)"/>
+  <rect width="200" height="280" rx="10" fill="url(#pv2)"/>
+  <rect width="200" height="280" rx="10" fill="url(#ovv2)"/>
+  <text x="100" y="145" text-anchor="middle" dominant-baseline="central"
+    font-family="Georgia, 'Times New Roman', serif" font-size="130" font-weight="bold"
+    fill="white" opacity="0.88" style="text-shadow:0 4px 24px rgba(0,0,0,0.5)">V</text>
+  <rect x="0" y="238" width="200" height="42" rx="0" fill="rgba(0,0,0,0.65)"/>
+  <text x="10" y="256" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">New South Wales</text>
+  <text x="10" y="272" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="8" fill="rgba(255,255,255,0.5)">34°17'S · 150°49'E · Landsat 9</text>
+</svg>
