@@ -126,11 +126,43 @@
   }
 }
 
-/* Shundori app styles */
+/* Shundori design tokens */
 :root {
-  --accent-color: #e8a0b4;
+  --plum-deep: #2a0f1f;
+  --rose-gold: #d99aa3;
+  --gold: #c9a15f;
+  --blush: #f2d9dc;
+  --ivory: #faf3ef;
+  --mauve: #8a5a67;
+  --accent-color: #d99aa3;
   --bg-color: #fef5f7;
   --card-color: #ffffff;
+  --app-label-color: rgba(0,0,0,0.75);
+}
+.dark {
+  --app-label-color: rgba(255,255,255,0.85);
+}
+
+/* Focus-visible for keyboard accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Scrollbar styling */

@@ -1,23 +1,21 @@
 // Shundori — All customizable content lives here.
+// localStorage key namespace: shundori:
+
 export const LOGIN_NAME = "QUAZI ZARIN SUBAH";
 export const LOGIN_PASSWORD = "4May2003";
+
+// Date the couple first met — used for "Days Together" counter
+export const FIRST_MEET_DATE = "2023-01-15";
 
 export type ThemeName = "rose" | "pink" | "lavender" | "midnight" | "warm-white" | "soft-blue";
 export const DEFAULT_THEME: ThemeName = "rose";
 
-export function getShundoriIcon(): string {
-  if (typeof window !== "undefined") {
-    return localStorage.getItem("shundori-icon") || "✦";
-  }
-  return "✦";
-}
-
 export const THEMES: Record<ThemeName, { label: string; accent: string; bg: string; card: string; gradient: string }> = {
-  rose:         { label: "Rose",       accent: "#e8a0b4", bg: "#fef5f7", card: "#ffffff", gradient: "linear-gradient(135deg, #fce4ec, #f8bbd0, #f48fb1)" },
+  rose:         { label: "Rose",       accent: "#d99aa3", bg: "#fef5f7", card: "#ffffff", gradient: "linear-gradient(135deg, #fce4ec, #f8bbd0, #f48fb1)" },
   pink:         { label: "Pink",       accent: "#f06292", bg: "#fce4ec", card: "#ffffff", gradient: "linear-gradient(135deg, #f8bbd0, #f48fb1, #ec407a)" },
   lavender:     { label: "Lavender",   accent: "#b39ddb", bg: "#f3e5f5", card: "#ffffff", gradient: "linear-gradient(135deg, #ede7f6, #d1c4e9, #b39ddb)" },
   midnight:     { label: "Midnight",   accent: "#90caf9", bg: "#1a1a2e", card: "#16213e", gradient: "linear-gradient(135deg, #0f3460, #1a1a2e, #533483)" },
-  "warm-white": { label: "Warm White", accent: "#d4a574", bg: "#faf6f1", card: "#ffffff", gradient: "linear-gradient(135deg, #faf6f1, #f0e6d8, #d4a574)" },
+  "warm-white": { label: "Warm White", accent: "#c9a15f", bg: "#faf6f1", card: "#ffffff", gradient: "linear-gradient(135deg, #faf6f1, #f0e6d8, #d4a574)" },
   "soft-blue":  { label: "Soft Blue",  accent: "#81d4fa", bg: "#e3f2fd", card: "#ffffff", gradient: "linear-gradient(135deg, #e3f2fd, #bbdefb, #81d4fa)" },
 };
 
@@ -87,3 +85,15 @@ export const appData = {
 
   landMessage: "Some names deserve the world.",
 };
+
+// Namespaced localStorage helpers
+export const STORAGE = {
+  auth: "shundori:auth",
+  theme: "shundori:theme",
+  darkMode: "shundori:nightMode",
+  appName: "shundori:appName",
+  appIcon: "shundori:appIcon",
+  photos: "shundori:photos",
+  favorites: "shundori:favorites",
+  recentApps: "shundori:recentApps",
+} as const;

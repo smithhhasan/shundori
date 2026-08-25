@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Plus, Trash2, Camera } from "lucide-react";
 import { type Photo } from "@/data/shundori-data";
 
-const STORAGE_KEY = "shundori-photos";
-const FAV_KEY = "shundori-favs";
+import { STORAGE } from "@/data/shundori-data";
+const STORAGE_KEY = STORAGE.photos;
+const FAV_KEY = STORAGE.favorites;
 
 function loadSavedPhotos(): Photo[] { try { const s = localStorage.getItem(STORAGE_KEY); if (s) return JSON.parse(s); } catch {} return []; }
 function savePhotos(photos: Photo[]) { localStorage.setItem(STORAGE_KEY, JSON.stringify(photos)); }
