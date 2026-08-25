@@ -52,7 +52,7 @@ export default function HomeSection() {
         </h1>
 
         <p className="text-foreground/50 text-base italic max-w-xs mx-auto leading-relaxed mb-8">
-          "A little world made just for you."
+          "Made just for you."
         </p>
 
         <motion.div
@@ -72,7 +72,7 @@ export default function HomeSection() {
           transition={{ delay: 1.2 }}
           className="text-foreground/30 text-xs mt-8"
         >
-          Made with love, for {appData.personName}
+          Made with love for {appData.personName}
         </motion.p>
       </motion.div>
     </div>

@@ -23,7 +23,7 @@ export default function NameOnLandSection() {
       >
         Your Name on Land
       </motion.h2>
-      <p className="text-foreground/40 text-sm mb-6 italic">Some names deserve their own little piece of the world.</p>
+      <p className="text-foreground/40 text-sm mb-6 italic">Some names deserve the world.</p>
 
       {/* Cinematic landscape */}
       <div className="relative rounded-3xl overflow-hidden h-[70vh] min-h-[400px] flex items-center justify-center">

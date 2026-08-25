@@ -26,14 +26,14 @@ export const THEMES: Record<ThemeName, { label: string; accent: string; bg: stri
 };
 
 export const NO_MESSAGES = [
-  "Are you sure? 🤔",
-  "Nice try 😄",
-  "Think again… 🙃",
-  "That doesn't seem like the right answer 💫",
-  "You know the answer 🌸",
-  "Come on, you want to 💕",
-  "This button doesn't work, sorry! 😋",
-  "Wrong button, try the other one ✨",
+  "Are you sure?",
+  "Nice try.",
+  "Think again…",
+  "That's not the right answer.",
+  "You know the answer.",
+  "Come on, you want to.",
+  "That button doesn't work.",
+  "Try the other one.",
 ];
 
 export interface Photo {
@@ -76,16 +76,15 @@ export const appData = {
   personName: "QUAZI ZARIN SUBAH",
 
   welcomeMessages: [
-    "Some people enter your life quietly,",
-    "and somehow make everything",
-    "feel a little more beautiful.",
+    "Some souls enter quietly,",
+    "and make everything beautiful.",
     "",
-    "This little place was made for",
-    "someone who means a little more",
-    "than words can explain.",
+    "This was made for someone",
+    "who means more than words",
+    "can ever say.",
   ],
 
-  homeQuote: "If this place could say one thing, it would simply say: I'm glad you exist.",
+  homeQuote: "I'm glad you exist.",
 
   photos: [
     { id: 1, src: "", caption: "A beautiful day", date: "2024-01-15" },
@@ -128,5 +127,5 @@ export const appData = {
     { id: 4, title: "One More Thing", message: "You make the world a better place just by being in it. ⭐", emoji: "⭐" },
   ] as Gift[],
 
-  landMessage: "Some names deserve their own little piece of the world.",
+  landMessage: "Some names deserve the world.",
 };

@@ -48,7 +48,7 @@ export default function Login() {
             className="text-2xl font-serif mb-2"
             style={{ color: "var(--accent-color, #e8a0b4)" }}
           >
-            Welcome to your little world.
+            Welcome to your world.
           </motion.h1>
           <motion.div
             initial={{ width: 0 }}
@@ -95,7 +95,7 @@ export default function Login() {
             Welcome, {appData.appName}.
           </h1>
           <p className="text-foreground/50 text-sm italic">
-            "Only one person knows the way in."
+            "Only you know the way in."
           </p>
         </div>
 
@@ -110,7 +110,7 @@ export default function Login() {
           <div className="relative">
             <input
               type="text"
-              placeholder="Enter your name"
+              placeholder="Your name"
               value={name}
               onChange={(e) => { setName(e.target.value); setError(""); }}
               className="w-full px-5 py-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/40 shadow-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-[var(--accent-color,#e8a0b4)]/40 transition-all text-base"
@@ -121,7 +121,7 @@ export default function Login() {
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Enter the password"
+              placeholder="Password (hint: a special date)"
               value={password}
               onChange={(e) => { setPassword(e.target.value); setError(""); }}
               className="w-full px-5 py-4 pr-24 rounded-2xl bg-white/60 backdrop-blur-md border border-white/40 shadow-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-[var(--accent-color,#e8a0b4)]/40 transition-all text-base"

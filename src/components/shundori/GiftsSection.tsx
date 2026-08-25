@@ -15,7 +15,7 @@ export default function GiftsSection() {
       >
         Gifts
       </motion.h2>
-      <p className="text-foreground/40 text-sm mb-6">A few little surprises, just for you.</p>
+      <p className="text-foreground/40 text-sm mb-6">Surprises made for you.</p>
 
       <div className="grid grid-cols-2 gap-3">
         {appData.gifts.map((g, i) => {

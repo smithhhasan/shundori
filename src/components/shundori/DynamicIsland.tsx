@@ -86,7 +86,7 @@ export default function DynamicIsland({ onComplete }: DynamicIslandProps) {
                   transition={{ delay: 0.4 }}
                   className="text-white/60 text-xs truncate"
                 >
-                  Your Personal World
+                  For Your Eyes Only
                 </motion.p>
               </div>
 
@@ -138,7 +138,7 @@ export default function DynamicIsland({ onComplete }: DynamicIslandProps) {
             transition={{ delay: 0.5, duration: 0.6 }}
             className="mt-8 text-center"
           >
-            <p className="text-foreground/60 text-sm italic">Welcome to your little world.</p>
+            <p className="text-foreground/60 text-sm italic">Welcome to your world.</p>
           </motion.div>
         )}
       </AnimatePresence>

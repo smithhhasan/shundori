@@ -15,7 +15,7 @@ export default function JhograSection() {
       >
         Jhogra
       </motion.h2>
-      <p className="text-foreground/40 text-sm mb-6">Our little arguments that were never serious 😄</p>
+      <p className="text-foreground/40 text-sm mb-6">The fun moments.</p>
 
       <div className="space-y-3">
         {appData.jhogra.map((j, i) => (

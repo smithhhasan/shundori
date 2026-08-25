@@ -82,7 +82,7 @@ export default function PhotosSection() {
       >
         Photos
       </motion.h2>
-      <p className="text-foreground/40 text-sm mb-6">Moments we captured.</p>
+      <p className="text-foreground/40 text-sm mb-6">Your favorite moments.</p>
 
       {/* Add photo button */}
       <motion.button

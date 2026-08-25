@@ -3,9 +3,9 @@ import { Clock, Gift, Mountain } from "lucide-react";
 import { useNavigate } from "react-router";
 
 const items = [
-  { label: "First Meet", icon: Clock, path: "/app/first-meet", desc: "Where it all started" },
-  { label: "Gifts", icon: Gift, path: "/app/gifts", desc: "A few little surprises" },
-  { label: "Your Name on Land", icon: Mountain, path: "/app/name-on-land", desc: "A name worth remembering" },
+  { label: "First Meet", icon: Clock, path: "/app/first-meet", desc: "Where it began" },
+  { label: "Gifts", icon: Gift, path: "/app/gifts", desc: "Surprises for you" },
+  { label: "Your Name on Land", icon: Mountain, path: "/app/name-on-land", desc: "Written across the world" },
 ];
 
 export default function MoreSection() {
