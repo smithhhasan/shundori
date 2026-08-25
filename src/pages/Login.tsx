@@ -5,6 +5,17 @@ import { Eye, EyeOff, CalendarDays } from "lucide-react";
 import { LOGIN_NAME, LOGIN_PASSWORD, appData } from "@/data/shundori-data";
 import DynamicIsland from "@/components/shundori/DynamicIsland";
 
+/* Normalize date passwords: "4/5/2003", "4-5-2003", "4May2003", "4 may 2003" → "4May2003" */
+function normalizeDate(s: string): string {
+  const trimmed = s.trim();
+  // Already matches directly
+  if (trimmed === LOGIN_PASSWORD) return LOGIN_PASSWORD;
+  // Strip slashes, dashes, dots, spaces → compare digits+letters only
+  const stripped = trimmed.replace(/[\/\-.\s]/g, "").toLowerCase();
+  const target = LOGIN_PASSWORD.replace(/[\/\-.\s]/g, "").toLowerCase();
+  return stripped === target ? LOGIN_PASSWORD : trimmed;
+}
+
 export default function Login() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -16,7 +27,8 @@ export default function Login() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name === LOGIN_NAME && password === LOGIN_PASSWORD) {
+    const normalized = normalizeDate(password);
+    if (name.trim() === LOGIN_NAME && normalized === LOGIN_PASSWORD) {
       setError("");
       setPhase("welcome");
       setTimeout(() => setPhase("island"), 1400);
@@ -152,7 +164,7 @@ export default function Login() {
             )}
           </AnimatePresence>
 
-          {/* Enter button */}
+          {/* Enter your world button */}
           <motion.button
             type="submit"
             whileHover={{ scale: 1.02 }}
@@ -160,7 +172,7 @@ export default function Login() {
             className="w-full py-4 rounded-2xl text-white font-semibold text-base shadow-lg cursor-pointer transition-all"
             style={{ background: "var(--accent-color, #e8a0b4)" }}
           >
-            Enter
+            Enter your world
           </motion.button>
         </motion.form>
       </motion.div>
