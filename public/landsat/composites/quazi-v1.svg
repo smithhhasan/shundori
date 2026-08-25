@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="240" viewBox="0 0 520 240">
+  <rect width="520" height="240" rx="8" fill="#0a0a0a"/>
+  <g transform="translate(6, 10)">
+    <g transform="translate(0, 0)">
+      <defs>
+        <linearGradient id="bgquazi00" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#2a5a3a"/>
+          <stop offset="50%" stop-color="#5a9a5a"/>
+          <stop offset="100%" stop-color="#3a7a4a"/>
+        </linearGradient>
+        <pattern id="gridquazi00" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+        </pattern>
+        <linearGradient id="ovquazi00" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(0,0,0,0.05)"/>
+          <stop offset="40%" stop-color="rgba(0,0,0,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <clipPath id="clipquazi00"><rect width="98" height="220" rx="6"/></clipPath>
+      </defs>
+      <g clip-path="url(#clipquazi00)">
+        <rect width="98" height="220" fill="url(#bgquazi00)"/>
+        <rect width="98" height="220" fill="url(#gridquazi00)"/>
+        <path d="M10,0 Q30,40 15,80 T25,160" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M20,10 Q40,50 25,100 T35,180" stroke="rgba(0,0,0,0.1)" stroke-width="1.5" fill="none"/>
+        <rect width="98" height="220" fill="url(#ovquazi00)"/>
+        <text x="49" y="115" text-anchor="middle" dominant-baseline="central"
+          font-family="Georgia, 'Times New Roman', serif" font-size="90" font-weight="bold"
+          fill="white" opacity="0.85" style="text-shadow:0 3px 18px rgba(0,0,0,0.5)">Q</text>
+        <rect x="0" y="185" width="98" height="35" fill="rgba(0,0,0,0.6)"/>
+        <text x="6" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7" fill="rgba(255,255,255,0.8)">
+          Volcano</text>
+        <text x="6" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="6" fill="rgba(255,255,255,0.4)">
+          NASA Landsat</text>
+      </g>
+    </g>
+<g transform="translate(102, 0)">
+      <defs>
+        <linearGradient id="bgquazi01" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#7a5a3a"/>
+          <stop offset="50%" stop-color="#aa7a5a"/>
+          <stop offset="100%" stop-color="#6a6a4a"/>
+        </linearGradient>
+        <pattern id="gridquazi01" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+        </pattern>
+        <linearGradient id="ovquazi01" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(0,0,0,0.05)"/>
+          <stop offset="40%" stop-color="rgba(0,0,0,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <clipPath id="clipquazi01"><rect width="98" height="220" rx="6"/></clipPath>
+      </defs>
+      <g clip-path="url(#clipquazi01)">
+        <rect width="98" height="220" fill="url(#bgquazi01)"/>
+        <rect width="98" height="220" fill="url(#gridquazi01)"/>
+        <path d="M15,0 Q38,45 18,84 T31,160" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M24,10 Q46,53 30,102 T39,180" stroke="rgba(0,0,0,0.1)" stroke-width="1.5" fill="none"/>
+        <rect width="98" height="220" fill="url(#ovquazi01)"/>
+        <text x="49" y="115" text-anchor="middle" dominant-baseline="central"
+          font-family="Georgia, 'Times New Roman', serif" font-size="90" font-weight="bold"
+          fill="white" opacity="0.85" style="text-shadow:0 3px 18px rgba(0,0,0,0.5)">U</text>
+        <rect x="0" y="185" width="98" height="35" fill="rgba(0,0,0,0.6)"/>
+        <text x="6" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7" fill="rgba(255,255,255,0.8)">
+          Canyon</text>
+        <text x="6" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="6" fill="rgba(255,255,255,0.4)">
+          NASA Landsat</text>
+      </g>
+    </g>
+<g transform="translate(204, 0)">
+      <defs>
+        <linearGradient id="bgquazi02" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#1a3a5c"/>
+          <stop offset="50%" stop-color="#4a7a8c"/>
+          <stop offset="100%" stop-color="#8ab0c0"/>
+        </linearGradient>
+        <pattern id="gridquazi02" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+        </pattern>
+        <linearGradient id="ovquazi02" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(0,0,0,0.05)"/>
+          <stop offset="40%" stop-color="rgba(0,0,0,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <clipPath id="clipquazi02"><rect width="98" height="220" rx="6"/></clipPath>
+      </defs>
+      <g clip-path="url(#clipquazi02)">
+        <rect width="98" height="220" fill="url(#bgquazi02)"/>
+        <rect width="98" height="220" fill="url(#gridquazi02)"/>
+        <path d="M20,0 Q46,50 21,88 T37,160" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M28,10 Q52,56 35,104 T43,180" stroke="rgba(0,0,0,0.1)" stroke-width="1.5" fill="none"/>
+        <rect width="98" height="220" fill="url(#ovquazi02)"/>
+        <text x="49" y="115" text-anchor="middle" dominant-baseline="central"
+          font-family="Georgia, 'Times New Roman', serif" font-size="90" font-weight="bold"
+          fill="white" opacity="0.85" style="text-shadow:0 3px 18px rgba(0,0,0,0.5)">A</text>
+        <rect x="0" y="185" width="98" height="35" fill="rgba(0,0,0,0.6)"/>
+        <text x="6" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7" fill="rgba(255,255,255,0.8)">
+          Lake</text>
+        <text x="6" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="6" fill="rgba(255,255,255,0.4)">
+          NASA Landsat</text>
+      </g>
+    </g>
+<g transform="translate(0, 0)">
+      <defs>
+        <linearGradient id="bgquazi03" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#8a7a4a"/>
+          <stop offset="50%" stop-color="#baa06a"/>
+          <stop offset="100%" stop-color="#5a8a4a"/>
+        </linearGradient>
+        <pattern id="gridquazi03" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+        </pattern>
+        <linearGradient id="ovquazi03" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(0,0,0,0.05)"/>
+          <stop offset="40%" stop-color="rgba(0,0,0,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <clipPath id="clipquazi03"><rect width="98" height="220" rx="6"/></clipPath>
+      </defs>
+      <g clip-path="url(#clipquazi03)">
+        <rect width="98" height="220" fill="url(#bgquazi03)"/>
+        <rect width="98" height="220" fill="url(#gridquazi03)"/>
+        <path d="M10,0 Q30,40 15,80 T25,160" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M20,10 Q40,50 25,100 T35,180" stroke="rgba(0,0,0,0.1)" stroke-width="1.5" fill="none"/>
+        <rect width="98" height="220" fill="url(#ovquazi03)"/>
+        <text x="49" y="115" text-anchor="middle" dominant-baseline="central"
+          font-family="Georgia, 'Times New Roman', serif" font-size="90" font-weight="bold"
+          fill="white" opacity="0.85" style="text-shadow:0 3px 18px rgba(0,0,0,0.5)">Z</text>
+        <rect x="0" y="185" width="98" height="35" fill="rgba(0,0,0,0.6)"/>
+        <text x="6" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7" fill="rgba(255,255,255,0.8)">
+          Desert</text>
+        <text x="6" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="6" fill="rgba(255,255,255,0.4)">
+          NASA Landsat</text>
+      </g>
+    </g>
+<g transform="translate(102, 0)">
+      <defs>
+        <linearGradient id="bgquazi04" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#8a6a4a"/>
+          <stop offset="50%" stop-color="#ba9a6a"/>
+          <stop offset="100%" stop-color="#daca9a"/>
+        </linearGradient>
+        <pattern id="gridquazi04" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+        </pattern>
+        <linearGradient id="ovquazi04" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(0,0,0,0.05)"/>
+          <stop offset="40%" stop-color="rgba(0,0,0,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <clipPath id="clipquazi04"><rect width="98" height="220" rx="6"/></clipPath>
+      </defs>
+      <g clip-path="url(#clipquazi04)">
+        <rect width="98" height="220" fill="url(#bgquazi04)"/>
+        <rect width="98" height="220" fill="url(#gridquazi04)"/>
+        <path d="M15,0 Q38,45 18,84 T31,160" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M24,10 Q46,53 30,102 T39,180" stroke="rgba(0,0,0,0.1)" stroke-width="1.5" fill="none"/>
+        <rect width="98" height="220" fill="url(#ovquazi04)"/>
+        <text x="49" y="115" text-anchor="middle" dominant-baseline="central"
+          font-family="Georgia, 'Times New Roman', serif" font-size="90" font-weight="bold"
+          fill="white" opacity="0.85" style="text-shadow:0 3px 18px rgba(0,0,0,0.5)">I</text>
+        <rect x="0" y="185" width="98" height="35" fill="rgba(0,0,0,0.6)"/>
+        <text x="6" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7" fill="rgba(255,255,255,0.8)">
+          Morocco</text>
+        <text x="6" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="6" fill="rgba(255,255,255,0.4)">
+          NASA Landsat</text>
+      </g>
+    </g>
+  </g>
+</svg>

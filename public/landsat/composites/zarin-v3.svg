@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="240" viewBox="0 0 520 240">
+  <rect width="520" height="240" rx="8" fill="#0a0a0a"/>
+  <g transform="translate(6, 10)">
+    <g transform="translate(204, 0)">
+      <defs>
+        <linearGradient id="bgzarin20" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#9a8a5a"/>
+          <stop offset="50%" stop-color="#caa87a"/>
+          <stop offset="100%" stop-color="#e0c8a0"/>
+        </linearGradient>
+        <pattern id="gridzarin20" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+        </pattern>
+        <linearGradient id="ovzarin20" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(0,0,0,0.05)"/>
+          <stop offset="40%" stop-color="rgba(0,0,0,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <clipPath id="clipzarin20"><rect width="98" height="220" rx="6"/></clipPath>
+      </defs>
+      <g clip-path="url(#clipzarin20)">
+        <rect width="98" height="220" fill="url(#bgzarin20)"/>
+        <rect width="98" height="220" fill="url(#gridzarin20)"/>
+        <path d="M20,0 Q46,50 21,88 T37,160" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M28,10 Q52,56 35,104 T43,180" stroke="rgba(0,0,0,0.1)" stroke-width="1.5" fill="none"/>
+        <rect width="98" height="220" fill="url(#ovzarin20)"/>
+        <text x="49" y="115" text-anchor="middle" dominant-baseline="central"
+          font-family="Georgia, 'Times New Roman', serif" font-size="90" font-weight="bold"
+          fill="white" opacity="0.85" style="text-shadow:0 3px 18px rgba(0,0,0,0.5)">Z</text>
+        <rect x="0" y="185" width="98" height="35" fill="rgba(0,0,0,0.6)"/>
+        <text x="6" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7" fill="rgba(255,255,255,0.8)">
+          Sahara</text>
+        <text x="6" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="6" fill="rgba(255,255,255,0.4)">
+          NASA Landsat</text>
+      </g>
+    </g>
+<g transform="translate(0, 0)">
+      <defs>
+        <linearGradient id="bgzarin21" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#2d5a1e"/>
+          <stop offset="50%" stop-color="#5a8c3a"/>
+          <stop offset="100%" stop-color="#c4a265"/>
+        </linearGradient>
+        <pattern id="gridzarin21" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+        </pattern>
+        <linearGradient id="ovzarin21" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(0,0,0,0.05)"/>
+          <stop offset="40%" stop-color="rgba(0,0,0,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <clipPath id="clipzarin21"><rect width="98" height="220" rx="6"/></clipPath>
+      </defs>
+      <g clip-path="url(#clipzarin21)">
+        <rect width="98" height="220" fill="url(#bgzarin21)"/>
+        <rect width="98" height="220" fill="url(#gridzarin21)"/>
+        <path d="M10,0 Q30,40 15,80 T25,160" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M20,10 Q40,50 25,100 T35,180" stroke="rgba(0,0,0,0.1)" stroke-width="1.5" fill="none"/>
+        <rect width="98" height="220" fill="url(#ovzarin21)"/>
+        <text x="49" y="115" text-anchor="middle" dominant-baseline="central"
+          font-family="Georgia, 'Times New Roman', serif" font-size="90" font-weight="bold"
+          fill="white" opacity="0.85" style="text-shadow:0 3px 18px rgba(0,0,0,0.5)">A</text>
+        <rect x="0" y="185" width="98" height="35" fill="rgba(0,0,0,0.6)"/>
+        <text x="6" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7" fill="rgba(255,255,255,0.8)">
+          River</text>
+        <text x="6" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="6" fill="rgba(255,255,255,0.4)">
+          NASA Landsat</text>
+      </g>
+    </g>
+<g transform="translate(102, 0)">
+      <defs>
+        <linearGradient id="bgzarin22" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#0a5a7a"/>
+          <stop offset="50%" stop-color="#2a8aaa"/>
+          <stop offset="100%" stop-color="#5abada"/>
+        </linearGradient>
+        <pattern id="gridzarin22" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+        </pattern>
+        <linearGradient id="ovzarin22" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(0,0,0,0.05)"/>
+          <stop offset="40%" stop-color="rgba(0,0,0,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <clipPath id="clipzarin22"><rect width="98" height="220" rx="6"/></clipPath>
+      </defs>
+      <g clip-path="url(#clipzarin22)">
+        <rect width="98" height="220" fill="url(#bgzarin22)"/>
+        <rect width="98" height="220" fill="url(#gridzarin22)"/>
+        <path d="M15,0 Q38,45 18,84 T31,160" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M24,10 Q46,53 30,102 T39,180" stroke="rgba(0,0,0,0.1)" stroke-width="1.5" fill="none"/>
+        <rect width="98" height="220" fill="url(#ovzarin22)"/>
+        <text x="49" y="115" text-anchor="middle" dominant-baseline="central"
+          font-family="Georgia, 'Times New Roman', serif" font-size="90" font-weight="bold"
+          fill="white" opacity="0.85" style="text-shadow:0 3px 18px rgba(0,0,0,0.5)">R</text>
+        <rect x="0" y="185" width="98" height="35" fill="rgba(0,0,0,0.6)"/>
+        <text x="6" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7" fill="rgba(255,255,255,0.8)">
+          Coast</text>
+        <text x="6" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="6" fill="rgba(255,255,255,0.4)">
+          NASA Landsat</text>
+      </g>
+    </g>
+<g transform="translate(204, 0)">
+      <defs>
+        <linearGradient id="bgzarin23" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#9a8a6a"/>
+          <stop offset="50%" stop-color="#c0b080"/>
+          <stop offset="100%" stop-color="#e0d0a0"/>
+        </linearGradient>
+        <pattern id="gridzarin23" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+        </pattern>
+        <linearGradient id="ovzarin23" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(0,0,0,0.05)"/>
+          <stop offset="40%" stop-color="rgba(0,0,0,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <clipPath id="clipzarin23"><rect width="98" height="220" rx="6"/></clipPath>
+      </defs>
+      <g clip-path="url(#clipzarin23)">
+        <rect width="98" height="220" fill="url(#bgzarin23)"/>
+        <rect width="98" height="220" fill="url(#gridzarin23)"/>
+        <path d="M20,0 Q46,50 21,88 T37,160" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M28,10 Q52,56 35,104 T43,180" stroke="rgba(0,0,0,0.1)" stroke-width="1.5" fill="none"/>
+        <rect width="98" height="220" fill="url(#ovzarin23)"/>
+        <text x="49" y="115" text-anchor="middle" dominant-baseline="central"
+          font-family="Georgia, 'Times New Roman', serif" font-size="90" font-weight="bold"
+          fill="white" opacity="0.85" style="text-shadow:0 3px 18px rgba(0,0,0,0.5)">I</text>
+        <rect x="0" y="185" width="98" height="35" fill="rgba(0,0,0,0.6)"/>
+        <text x="6" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7" fill="rgba(255,255,255,0.8)">
+          Namibia</text>
+        <text x="6" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="6" fill="rgba(255,255,255,0.4)">
+          NASA Landsat</text>
+      </g>
+    </g>
+<g transform="translate(0, 0)">
+      <defs>
+        <linearGradient id="bgzarin24" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stop-color="#1a4a3a"/>
+          <stop offset="50%" stop-color="#3a8a5a"/>
+          <stop offset="100%" stop-color="#6aba6a"/>
+        </linearGradient>
+        <pattern id="gridzarin24" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+        </pattern>
+        <linearGradient id="ovzarin24" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(0,0,0,0.05)"/>
+          <stop offset="40%" stop-color="rgba(0,0,0,0.2)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </linearGradient>
+        <clipPath id="clipzarin24"><rect width="98" height="220" rx="6"/></clipPath>
+      </defs>
+      <g clip-path="url(#clipzarin24)">
+        <rect width="98" height="220" fill="url(#bgzarin24)"/>
+        <rect width="98" height="220" fill="url(#gridzarin24)"/>
+        <path d="M10,0 Q30,40 15,80 T25,160" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+          <path d="M20,10 Q40,50 25,100 T35,180" stroke="rgba(0,0,0,0.1)" stroke-width="1.5" fill="none"/>
+        <rect width="98" height="220" fill="url(#ovzarin24)"/>
+        <text x="49" y="115" text-anchor="middle" dominant-baseline="central"
+          font-family="Georgia, 'Times New Roman', serif" font-size="90" font-weight="bold"
+          fill="white" opacity="0.85" style="text-shadow:0 3px 18px rgba(0,0,0,0.5)">N</text>
+        <rect x="0" y="185" width="98" height="35" fill="rgba(0,0,0,0.6)"/>
+        <text x="6" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7" fill="rgba(255,255,255,0.8)">
+          River</text>
+        <text x="6" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="6" fill="rgba(255,255,255,0.4)">
+          NASA Landsat</text>
+      </g>
+    </g>
+  </g>
+</svg>
