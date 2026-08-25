@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
 import { Eye, EyeOff, CalendarDays } from "lucide-react";
 import { LOGIN_NAME, LOGIN_PASSWORD, appData } from "@/data/shundori-data";
+import DynamicIsland from "@/components/shundori/DynamicIsland";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,14 +12,14 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
-  const [transitioning, setTransitioning] = useState(false);
+  const [phase, setPhase] = useState<"form" | "welcome" | "island">("form");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name === LOGIN_NAME && password === LOGIN_PASSWORD) {
       setError("");
-      setTransitioning(true);
-      setTimeout(() => navigate("/app"), 1400);
+      setPhase("welcome");
+      setTimeout(() => setPhase("island"), 1400);
     } else {
       setError("Hmm… that doesn't look right.");
       setShake(true);
@@ -26,7 +27,12 @@ export default function Login() {
     }
   };
 
-  if (transitioning) {
+  const handleIslandComplete = useCallback(() => {
+    navigate("/app");
+  }, [navigate]);
+
+  // Show "Welcome" text
+  if (phase === "welcome") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <motion.div
@@ -54,6 +60,11 @@ export default function Login() {
         </motion.div>
       </div>
     );
+  }
+
+  // Show Dynamic Island
+  if (phase === "island") {
+    return <DynamicIsland onComplete={handleIslandComplete} />;
   }
 
   return (

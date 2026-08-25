@@ -37,7 +37,7 @@ export default function GiftsSection() {
                   scale: isOpen ? 1.02 : 1,
                 }}
                 transition={{ duration: 0.5, type: "spring" }}
-                className="bg-white/50 backdrop-blur-lg rounded-3xl p-5 shadow-sm border border-white/30 aspect-[3/4] flex flex-col items-center justify-center text-center"
+                className="card-glass p-5 aspect-[3/4] flex flex-col items-center justify-center text-center"
                 style={{ perspective: 800 }}
               >
                 {!isOpen ? (

@@ -42,7 +42,7 @@ export default function FirstMeetSection() {
                 style={{ background: "var(--accent-color, #e8a0b4)" }}
               />
 
-              <div className="bg-white/40 backdrop-blur-lg rounded-3xl p-5 shadow-sm border border-white/30">
+              <div className="card-glass p-5">
                 <h3 className="font-semibold text-foreground text-base mb-1">{item.title}</h3>
                 <p className="text-foreground/50 text-sm italic leading-relaxed">
                   "{item.description}"

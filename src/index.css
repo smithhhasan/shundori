@@ -178,6 +178,23 @@ body {
   transition-duration: 0.3s;
 }
 
+/* Glass card utility — works in both light and dark modes */
+.card-glass {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1.5rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.dark .card-glass {
+  background: rgba(26, 26, 46, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
 /* Image placeholders */
 .photo-placeholder {
   background: linear-gradient(135deg, var(--accent-color)33, var(--accent-color)11);

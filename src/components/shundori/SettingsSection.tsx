@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { THEMES, type ThemeName, appData } from "@/data/shundori-data";
-import { Palette, Type, Image, RotateCcw } from "lucide-react";
+import { Palette, Type, Image, RotateCcw, Moon, Sun } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface SettingsProps {
@@ -20,8 +20,22 @@ export default function SettingsSection({
 }: SettingsProps) {
   const [editingName, setEditingName] = useState(false);
   const [nameValue, setNameValue] = useState(customName);
+  const [isDark, setIsDark] = useState(() => localStorage.getItem("shundori-dark") === "true");
 
   useEffect(() => setNameValue(customName), [customName]);
+
+  const toggleDark = () => {
+    const next = !isDark;
+    setIsDark(next);
+    localStorage.setItem("shundori-dark", String(next));
+    window.location.reload();
+  };
+
+  const cardClass = "backdrop-blur-lg rounded-3xl p-5 shadow-sm border";
+  const cardStyle = {
+    background: isDark ? "rgba(26,26,46,0.6)" : "rgba(255,255,255,0.5)",
+    borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.3)",
+  };
 
   return (
     <div className="min-h-full px-4 py-6 pb-24">
@@ -35,15 +49,48 @@ export default function SettingsSection({
       </motion.h2>
 
       <div className="space-y-4">
+        {/* Night Mode Toggle */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`${cardClass} ${cardStyle}`}
+        >
+          <button
+            onClick={toggleDark}
+            className="w-full flex items-center justify-between cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              {isDark ? (
+                <Sun className="w-4 h-4 text-yellow-400" />
+              ) : (
+                <Moon className="w-4 h-4 text-indigo-400" />
+              )}
+              <h3 className="font-semibold text-sm" style={{ color: isDark ? "#e0e0e0" : undefined }}>
+                Night Mode
+              </h3>
+            </div>
+            <div
+              className={`w-11 h-6 rounded-full relative transition-colors ${isDark ? "bg-[var(--accent-color)]" : "bg-foreground/10"}`}
+            >
+              <motion.div
+                animate={{ x: isDark ? 20 : 2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm"
+              />
+            </div>
+          </button>
+        </motion.div>
+
         {/* Theme */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/50 backdrop-blur-lg rounded-3xl p-5 shadow-sm border border-white/30"
+          transition={{ delay: 0.1 }}
+          className={`${cardClass} ${cardStyle}`}
         >
           <div className="flex items-center gap-3 mb-4">
             <Palette className="w-4 h-4 text-foreground/40" />
-            <h3 className="font-semibold text-foreground text-sm">Appearance</h3>
+            <h3 className="font-semibold text-sm" style={{ color: isDark ? "#e0e0e0" : undefined }}>Appearance</h3>
           </div>
           <div className="grid grid-cols-3 gap-2">
             {(Object.keys(THEMES) as ThemeName[]).map((t) => (
@@ -51,9 +98,7 @@ export default function SettingsSection({
                 key={t}
                 onClick={() => onThemeChange(t)}
                 className={`p-3 rounded-2xl text-xs font-medium text-center transition-all cursor-pointer border-2 ${
-                  currentTheme === t
-                    ? "border-current shadow-md"
-                    : "border-transparent"
+                  currentTheme === t ? "border-current shadow-md" : "border-transparent"
                 }`}
                 style={{
                   background: THEMES[t].gradient,
@@ -70,12 +115,12 @@ export default function SettingsSection({
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white/50 backdrop-blur-lg rounded-3xl p-5 shadow-sm border border-white/30"
+          transition={{ delay: 0.2 }}
+          className={`${cardClass} ${cardStyle}`}
         >
           <div className="flex items-center gap-3 mb-3">
             <Type className="w-4 h-4 text-foreground/40" />
-            <h3 className="font-semibold text-foreground text-sm">App Name</h3>
+            <h3 className="font-semibold text-sm" style={{ color: isDark ? "#e0e0e0" : undefined }}>App Name</h3>
           </div>
           {editingName ? (
             <div className="flex gap-2">
@@ -83,7 +128,12 @@ export default function SettingsSection({
                 type="text"
                 value={nameValue}
                 onChange={(e) => setNameValue(e.target.value)}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-white/60 border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color,#e8a0b4)]/40"
+                className="flex-1 px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color,#e8a0b4)]/40"
+                style={{
+                  background: isDark ? "rgba(26,26,46,0.8)" : "rgba(255,255,255,0.6)",
+                  borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.4)",
+                  color: isDark ? "#e0e0e0" : undefined,
+                }}
               />
               <button
                 onClick={() => { onNameChange(nameValue); setEditingName(false); }}
@@ -96,7 +146,11 @@ export default function SettingsSection({
           ) : (
             <button
               onClick={() => setEditingName(true)}
-              className="w-full text-left px-4 py-2.5 rounded-xl bg-white/40 text-sm text-foreground/60 cursor-pointer hover:bg-white/60 transition-colors"
+              className="w-full text-left px-4 py-2.5 rounded-xl text-sm cursor-pointer hover:opacity-80 transition-opacity"
+              style={{
+                background: isDark ? "rgba(26,26,46,0.8)" : "rgba(255,255,255,0.4)",
+                color: isDark ? "#e0e0e0" : undefined,
+              }}
             >
               {customName || appData.appName} →
             </button>
@@ -107,15 +161,17 @@ export default function SettingsSection({
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white/50 backdrop-blur-lg rounded-3xl p-5 shadow-sm border border-white/30"
+          transition={{ delay: 0.3 }}
+          className={`${cardClass} ${cardStyle}`}
         >
           <div className="flex items-center gap-3 mb-3">
             <Image className="w-4 h-4 text-foreground/40" />
-            <h3 className="font-semibold text-foreground text-sm">App Icon</h3>
+            <h3 className="font-semibold text-sm" style={{ color: isDark ? "#e0e0e0" : undefined }}>App Icon</h3>
           </div>
-          <p className="text-foreground/40 text-xs mb-3">
-            Current: <span className="text-foreground/60">✦</span>
+          <p className="text-xs mb-3" style={{ color: isDark ? "rgba(255,255,255,0.3)" : undefined }}>
+            Current: <span style={{ color: isDark ? "rgba(255,255,255,0.5)" : undefined }}>
+              {localStorage.getItem("shundori-icon") || "✦"}
+            </span>
           </p>
           <div className="flex gap-2 flex-wrap">
             {["✦", "♡", "🌸", "🦋", "🌙", "⭐", "💫", "🌺", "💝", "🎨"].map((icon) => (
@@ -125,7 +181,8 @@ export default function SettingsSection({
                   localStorage.setItem("shundori-icon", icon);
                   window.location.reload();
                 }}
-                className="w-10 h-10 rounded-xl bg-white/60 flex items-center justify-center text-lg hover:bg-white/80 transition-colors cursor-pointer"
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-colors cursor-pointer"
+                style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.6)" }}
               >
                 {icon}
               </button>
@@ -137,11 +194,15 @@ export default function SettingsSection({
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
         >
           <button
             onClick={onReset}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl border border-red-300/40 text-red-400/70 text-sm font-medium hover:bg-red-50/50 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl border text-sm font-medium transition-colors cursor-pointer"
+            style={{
+              borderColor: isDark ? "rgba(239,68,68,0.2)" : "rgba(239,68,68,0.2)",
+              color: isDark ? "rgba(239,68,68,0.6)" : "rgba(239,68,68,0.5)",
+            }}
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset to default

@@ -33,7 +33,7 @@ export default function MoreSection() {
               transition={{ delay: i * 0.1 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate(item.path)}
-              className="w-full flex items-center gap-4 bg-white/50 backdrop-blur-lg rounded-3xl p-5 shadow-sm border border-white/30 cursor-pointer text-left"
+              className="w-full flex items-center gap-4 card-glass p-5 cursor-pointer text-left"
             >
               <div
                 className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
@@ -57,7 +57,7 @@ export default function MoreSection() {
           transition={{ delay: 0.3 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => navigate("/app/settings")}
-          className="w-full flex items-center gap-4 bg-white/50 backdrop-blur-lg rounded-3xl p-5 shadow-sm border border-white/30 cursor-pointer text-left"
+          className="w-full flex items-center gap-4 card-glass p-5 cursor-pointer text-left"
         >
           <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 bg-foreground/5">
             <span className="text-lg">⚙️</span>

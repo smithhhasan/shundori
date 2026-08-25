@@ -23,7 +23,7 @@ export default function MemoriesSection() {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.6, delay: i * 0.1 }}
             whileHover={{ y: -2 }}
-            className="bg-white/50 backdrop-blur-lg rounded-3xl p-6 shadow-sm border border-white/30"
+            className="card-glass p-6"
           >
             <div className="flex items-start gap-4">
               <div

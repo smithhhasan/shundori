@@ -29,7 +29,7 @@ export default function JhograSection() {
             <motion.div
               whileTap={{ scale: 0.98 }}
               onClick={() => setOpen(open === j.id ? null : j.id)}
-              className="bg-white/50 backdrop-blur-lg rounded-3xl p-5 shadow-sm border border-white/30 cursor-pointer"
+              className="card-glass p-5 cursor-pointer"
             >
               <div className="flex items-center gap-4">
                 <span className="text-2xl">{j.emoji}</span>

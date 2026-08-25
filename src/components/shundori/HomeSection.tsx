@@ -59,7 +59,7 @@ export default function HomeSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 1 }}
-          className="bg-white/40 backdrop-blur-lg rounded-3xl px-6 py-8 shadow-sm border border-white/30 max-w-sm mx-auto"
+          className="card-glass px-6 py-8 max-w-sm mx-auto"
         >
           <p className="text-foreground/60 text-sm leading-relaxed italic">
             "{appData.homeQuote}"
