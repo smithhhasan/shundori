@@ -1,81 +1,106 @@
-import { useState, useCallback } from "react";
-import { motion } from "framer-motion";
-import { ArrowLeft, Download, RefreshCw, ExternalLink } from "lucide-react";
+import { useState, useCallback, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, Download, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router";
 
-// Composite images stored in /landsat/composites/
-// Each name has 3 variants with different satellite letter tiles
-interface Composite {
-  file: string;
-  letters: string;
-  desc: string;
-}
+// ─── Hard-coded image files from public/assets/ ──────────────────────────────
+// Naming: name.png (base), name__N_.png (variants)
+// We group by base name (case-insensitive), ignoring the number suffix
 
-const COMPOSITES: Record<string, Composite[]> = {
+const IMAGE_MAP: Record<string, string[]> = {
   QUAZI: [
-    { file: "/landsat/composites/quazi-v1.svg", letters: "Q U A Z I", desc: "Mount Tambora · Hickman KY · Mohammed Boudiaf · Holuhraun" },
-    { file: "/landsat/composites/quazi-v2.svg", letters: "Q U A Z I", desc: "Lonar Crater · Canyonlands · Primavera do Leste · Djebel Ouarkziz" },
-    { file: "/landsat/composites/quazi-v3.svg", letters: "Q U A Z I", desc: "Volcanic Complex · High Desert · Saharan Edge · Etosha" },
-  ],
-  ZARIN: [
-    { file: "/landsat/composites/zarin-v1.svg", letters: "Z A R I N", desc: "Mohammed Boudiaf · Hickman KY · Canyonlands · Holuhraun · Sao Miguel" },
-    { file: "/landsat/composites/zarin-v2.svg", letters: "Z A R I N", desc: "Primavera do Leste · Yukon Delta · Florida Keys · Djebel Ouarkziz · Yapacani" },
-    { file: "/landsat/composites/zarin-v3.svg", letters: "Z A R I N", desc: "Saharan Edge · Lake Mjosa · Sondrio · Etosha · Araguaia River" },
+    "/assets/quazi.png",
+    "/assets/quazi__1_.png",
+    "/assets/QUAZI__2_.png",
+    "/assets/quazi__3_.png",
+    "/assets/quazi__4_.png",
+    "/assets/quazi__5_.png",
+    "/assets/quazi__6_.png",
+    "/assets/quazi__7_.png",
+    "/assets/QUAZI__8_.png",
+    "/assets/QUAZI__9_.png",
+    "/assets/QUAZI__10_.png",
   ],
   SUBAH: [
-    { file: "/landsat/composites/subah-v1.svg", letters: "S U B A H", desc: "Rio Chapare · Bamforth NWR · Humaita · Hickman KY · Khorinsky" },
-    { file: "/landsat/composites/subah-v2.svg", letters: "S U B A H", desc: "NDjamena · Canyonlands · Holla Bend · Yukon Delta · Kyrgyzstan" },
-    { file: "/landsat/composites/subah-v3.svg", letters: "S U B A H", desc: "Mackenzie River · High Desert · Fonte Boa · Lake Mjosa · Siberian Steppe" },
+    "/assets/subah.png",
+    "/assets/SUBAH__3_.png",
+    "/assets/SUBAH__5_.png",
+    "/assets/SUBAH__6_.png",
+    "/assets/SUBAH__7_.png",
   ],
 };
 
-const NASA_URL = "https://science.nasa.gov/specials/your-name-in-landsat/";
+// Only these names are valid
+const VALID_NAMES = new Set(["QUAZI", "SUBAH"]);
 
-// Only these exact names are supported (case-insensitive)
-const VALID_NAMES = new Set(["QUAZI", "ZARIN", "SUBAH"]);
+// Shuffle array (Fisher-Yates)
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const NASA_URL = "https://science.nasa.gov/specials/your-name-in-landsat/";
 
 export default function NameOnLandSection() {
   const navigate = useNavigate();
   const isDark = localStorage.getItem("shundori:darkMode") === "true";
 
   const [inputName, setInputName] = useState("");
-  const [variantIdx, setVariantIdx] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
   const [displayName, setDisplayName] = useState("");
+  const [shuffledImages, setShuffledImages] = useState<string[]>([]);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
 
-  const getComposite = useCallback((): Composite | null => {
-    if (!displayName) return null;
-    const upper = displayName.toUpperCase().trim();
-    // Only exact matches for valid names
-    if (!VALID_NAMES.has(upper)) return null;
-    const list = COMPOSITES[upper];
-    if (!list) return null;
-    return list[variantIdx % list.length];
-  }, [displayName, variantIdx]);
-
+  // Shuffle images when name is submitted
   const handleSubmit = useCallback(() => {
     const trimmed = inputName.trim();
     if (!trimmed) return;
-    setDisplayName(trimmed);
+    const upper = trimmed.toUpperCase().trim();
+    setDisplayName(upper);
     setSubmitted(true);
+    setCurrentIdx(0);
+
+    if (VALID_NAMES.has(upper)) {
+      setShuffledImages(shuffle(IMAGE_MAP[upper]));
+    } else {
+      setShuffledImages([]);
+    }
   }, [inputName]);
 
-  const handleCycle = useCallback(() => {
-    setVariantIdx((v) => v + 1);
-  }, []);
+  // Re-shuffle
+  const handleReshuffle = useCallback(() => {
+    if (!displayName || !VALID_NAMES.has(displayName)) return;
+    setShuffledImages(shuffle(IMAGE_MAP[displayName]));
+    setCurrentIdx(0);
+  }, [displayName]);
 
+  // Navigate images
+  const handlePrev = useCallback(() => {
+    setCurrentIdx((i) => (i > 0 ? i - 1 : shuffledImages.length - 1));
+  }, [shuffledImages.length]);
+
+  const handleNext = useCallback(() => {
+    setCurrentIdx((i) => (i < shuffledImages.length - 1 ? i + 1 : 0));
+  }, [shuffledImages.length]);
+
+  // Download current image
   const handleDownload = useCallback(() => {
-    const c = getComposite();
-    if (!c) return;
+    if (!shuffledImages[currentIdx]) return;
     const link = document.createElement("a");
-    link.href = c.file;
-    link.download = `${displayName}_landsat.svg`;
+    link.href = shuffledImages[currentIdx];
+    link.download = `${displayName}_landsat.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }, [getComposite, displayName]);
+  }, [shuffledImages, currentIdx, displayName]);
 
-  const composite = getComposite();
+  const isValid = submitted && VALID_NAMES.has(displayName);
+  const hasImages = shuffledImages.length > 0;
+  const currentImage = hasImages ? shuffledImages[currentIdx] : null;
 
   return (
     <div className="min-h-full px-5 pt-2 pb-6 overflow-hidden">
@@ -105,32 +130,66 @@ export default function NameOnLandSection() {
         </p>
       </div>
 
-      {/* Composite Image Display */}
-      {composite && (
+      {/* Image Display */}
+      {isValid && hasImages && (
         <motion.div
-          key={`${displayName}-${variantIdx}`}
+          key={displayName}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 24 }}
           className="mb-5"
         >
-          {/* The composite image */}
-          <div
-            className="rounded-2xl overflow-hidden mb-3"
-            style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.3)" }}
-          >
-            <img
-              src={composite.file}
-              alt={`${displayName} in Landsat satellite imagery`}
-              className="w-full h-auto block"
-              draggable={false}
-            />
+          {/* Image with navigation */}
+          <div className="relative rounded-2xl overflow-hidden mb-3" style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.3)" }}>
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={currentIdx}
+                src={currentImage!}
+                alt={`${displayName} in Landsat satellite imagery`}
+                className="w-full h-auto block"
+                draggable={false}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+              />
+            </AnimatePresence>
+
+            {/* Navigation arrows */}
+            {shuffledImages.length > 1 && (
+              <>
+                <button
+                  onClick={handlePrev}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer border-none"
+                  style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="w-4 h-4 text-white" />
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer border-none"
+                  style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="w-4 h-4 text-white" />
+                </button>
+              </>
+            )}
+
+            {/* Image counter */}
+            <div
+              className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-full text-[10px]"
+              style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)", color: "rgba(255,255,255,0.8)" }}
+            >
+              {currentIdx + 1} / {shuffledImages.length}
+            </div>
           </div>
 
-          {/* Name + description */}
+          {/* Name */}
           <div className="text-center mb-3">
             <h2
-              className="text-2xl font-bold tracking-widest mb-1"
+              className="text-2xl font-bold tracking-widest"
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 color: isDark ? "#f2f2f7" : "#1c1c1e",
@@ -139,21 +198,18 @@ export default function NameOnLandSection() {
             >
               {displayName}
             </h2>
-            <p className="text-[11px]" style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}>
-              {composite.desc}
-            </p>
           </div>
 
           {/* Action Buttons */}
           <div className="flex gap-2 justify-center">
             <motion.button
               whileTap={{ scale: 0.95 }}
-              onClick={handleCycle}
+              onClick={handleReshuffle}
               className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer border-none"
               style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }}
-              aria-label="Show different satellite images"
+              aria-label="Shuffle images"
             >
-              <RefreshCw className="w-3.5 h-3.5" /> New Images
+              <RefreshCw className="w-3.5 h-3.5" /> Shuffle
             </motion.button>
 
             <motion.button
@@ -165,29 +221,17 @@ export default function NameOnLandSection() {
             >
               <Download className="w-3.5 h-3.5" /> Download
             </motion.button>
-
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => window.open(composite.file, "_blank")}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer border-none"
-              style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)", color: isDark ? "#f2f2f7" : "#1c1c1e" }}
-              aria-label="View full image"
-            >
-              <ExternalLink className="w-3.5 h-3.5" /> View
-            </motion.button>
           </div>
-
-          {/* Variant info */}
-          <p className="text-center text-[10px] mt-3" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)" }}>
-            Variant {(variantIdx % 3) + 1} of 3 · Tap New Images to cycle
-          </p>
         </motion.div>
       )}
 
-      {/* Empty state — name not available */}
-      {!composite && submitted && (
+      {/* Name not available */}
+      {submitted && !isValid && (
         <div className="text-center py-10 mb-5">
-          <div className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center" style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}>
+          <div
+            className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center"
+            style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}
+          >
             <span className="text-lg">🛰️</span>
           </div>
           <p className="text-sm font-medium mb-1" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>
@@ -197,11 +241,12 @@ export default function NameOnLandSection() {
             Satellite imagery is only available for
           </p>
           <p className="text-[12px] font-semibold" style={{ color: "var(--accent-color, #d99aa3)" }}>
-            QUAZI · ZARIN · SUBAH
+            QUAZI · SUBAH
           </p>
         </div>
       )}
 
+      {/* Empty state */}
       {!submitted && (
         <div
           className="rounded-2xl overflow-hidden h-[160px] flex items-center justify-center mb-6 relative"
@@ -223,7 +268,7 @@ export default function NameOnLandSection() {
           <span className="text-sm">🛰️</span>
           <input
             type="text"
-            placeholder="Type a name (e.g. QUAZI, ZARIN, SUBAH)"
+            placeholder="Type a name (e.g. QUAZI, SUBAH)"
             value={inputName}
             onChange={(e) => setInputName(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); }}
@@ -244,11 +289,11 @@ export default function NameOnLandSection() {
         </motion.button>
 
         <p className="text-center text-[11px]" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)" }}>
-          Supported names: QUAZI · ZARIN · SUBAH
+          Supported names: QUAZI · SUBAH
         </p>
 
-        {/* Optional NASA reference link */}
-        <div className="text-center mt-2">
+        {/* Optional NASA reference */}
+        <div className="text-center mt-1">
           <a
             href={NASA_URL}
             target="_blank"
