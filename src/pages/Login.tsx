@@ -36,8 +36,9 @@ export default function Login() {
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    const normalized = normalizeDate(password);
-    if (name.trim().toUpperCase() === LOGIN_NAME.toUpperCase() && normalized === LOGIN_PASSWORD) {
+    const nameMatch = name.trim().toUpperCase() === LOGIN_NAME.toUpperCase();
+    const passMatch = normalizeDate(password) === LOGIN_PASSWORD;
+    if (nameMatch && passMatch) {
       setError("");
       localStorage.setItem(STORAGE.auth, "true");
       setPhase("welcome");
@@ -100,7 +101,7 @@ export default function Login() {
               onChange={(e) => { setName(e.target.value); setError(""); }}
               className="flex-1 bg-transparent border-none outline-none text-sm"
               style={{ color: "var(--ivory, #1c1c1e)", fontFamily: "-apple-system, 'SF Pro Text', sans-serif" }}
-              aria-label="Name" autoComplete="name" />
+              aria-label="Name" autoComplete="name" aria-required="true" />
           </div>
 
           {/* Password with calendar + eye */}
