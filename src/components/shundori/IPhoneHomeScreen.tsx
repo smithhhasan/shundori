@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Image, Heart, MessageCircle, Clock, Gift, MapPin,
-  Settings, Music, Cloud, CalendarDays, Moon, Sun, LogOut,
+  Settings, Cloud, Moon, Sun, LogOut, Search, X,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { THEMES, type ThemeName, appData } from "@/data/shundori-data";
@@ -15,14 +15,21 @@ interface Props {
   onThemeChange: (t: ThemeName) => void;
 }
 
-/* ── iOS-style icon component ──────────────────────────── */
+/* ── All available apps ─────────────────────────────── */
+const ALL_APPS = [
+  { id: "photos", label: "Photos", gradient: "linear-gradient(135deg, #f5a623, #f7c948, #7ec8e3, #d96ecf, #e85d75)", icon: <Image className="w-7 h-7 text-white" />, path: "/app/photos" },
+  { id: "memories", label: "Memories", gradient: "linear-gradient(135deg, #ff6b9d, #c44569)", icon: <Heart className="w-7 h-7 text-white" />, path: "/app/memories" },
+  { id: "jhogra", label: "Jhogra", gradient: "linear-gradient(135deg, #a18cd1, #fbc2eb)", icon: <MessageCircle className="w-7 h-7 text-white" />, path: "/app/jhogra" },
+  { id: "first-meet", label: "First Meet", gradient: "linear-gradient(135deg, #4facfe, #00f2fe)", icon: <Clock className="w-7 h-7 text-white" />, path: "/app/first-meet" },
+  { id: "gifts", label: "Gifts", gradient: "linear-gradient(135deg, #f093fb, #f5576c)", icon: <Gift className="w-7 h-7 text-white" />, path: "/app/gifts" },
+  { id: "name-land", label: "Name on Land", gradient: "linear-gradient(135deg, #667eea, #764ba2)", icon: <MapPin className="w-7 h-7 text-white" />, path: "/app/name-on-land" },
+  { id: "settings", label: "Settings", gradient: "linear-gradient(135deg, #8e8e93, #636366)", icon: <Settings className="w-7 h-7 text-white" />, path: "/app/settings" },
+];
+
+type AppItem = (typeof ALL_APPS)[number];
+
 function IosIcon({
-  gradient,
-  children,
-  size = 60,
-  label,
-  onTap,
-  animDelay,
+  gradient, children, size = 60, label, onTap, animDelay,
 }: {
   gradient: string;
   children: React.ReactNode;
@@ -36,28 +43,16 @@ function IosIcon({
     <motion.button
       initial={{ opacity: 0, scale: 0.2 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{
-        delay: animDelay ?? 0,
-        type: "spring",
-        stiffness: 260,
-        damping: 18,
-      }}
+      transition={{ delay: animDelay ?? 0, type: "spring", stiffness: 260, damping: 18 }}
       whileTap={{ scale: 0.82 }}
       onClick={onTap}
       className="flex flex-col items-center gap-[5px] cursor-pointer select-none"
     >
-      <div className="relative">
-        <div
-          className="flex items-center justify-center shadow-lg"
-          style={{
-            width: size,
-            height: size,
-            borderRadius: r,
-            background: gradient,
-          }}
-        >
-          {children}
-        </div>
+      <div
+        className="flex items-center justify-center shadow-lg"
+        style={{ width: size, height: size, borderRadius: r, background: gradient }}
+      >
+        {children}
       </div>
       <span
         className="text-[11px] leading-tight text-center max-w-[68px] truncate"
@@ -69,25 +64,60 @@ function IosIcon({
   );
 }
 
+const RECENT_KEY = "shundori-recent";
+
+function loadRecent(): string[] {
+  try {
+    const s = localStorage.getItem(RECENT_KEY);
+    return s ? JSON.parse(s) : [];
+  } catch { return []; }
+}
+
+function saveRecent(ids: string[]) {
+  localStorage.setItem(RECENT_KEY, JSON.stringify(ids.slice(0, 6)));
+}
+
 export default function PhoneHomeScreen({
-  onLogout, onToggleDark, isDark, currentTheme, onThemeChange,
+  onLogout, onToggleDark, isDark,
 }: Props) {
   const navigate = useNavigate();
   const [openApp, setOpenApp] = useState<string | null>(null);
   const [sheetApp, setSheetApp] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [recentIds, setRecentIds] = useState<string[]>(loadRecent);
 
   const now = new Date();
   const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   const dayStr = now.toLocaleDateString([], { weekday: "long" });
   const dateNum = now.getDate();
 
-  const openSection = (id: string, path: string) => {
-    setOpenApp(id);
+  const openSection = (app: AppItem) => {
+    setOpenApp(app.id);
+    // Track recent
+    setRecentIds((prev) => {
+      const next = [app.id, ...prev.filter((id) => id !== app.id)].slice(0, 6);
+      saveRecent(next);
+      return next;
+    });
     setTimeout(() => {
-      navigate(path);
+      navigate(app.path);
       setOpenApp(null);
+      setSearch("");
+      setSearchFocused(false);
     }, 500);
   };
+
+  const filtered = search.trim()
+    ? ALL_APPS.filter((a) =>
+        a.label.toLowerCase().includes(search.toLowerCase()),
+      )
+    : [];
+
+  const recentApps = recentIds
+    .map((id) => ALL_APPS.find((a) => a.id === id))
+    .filter(Boolean) as AppItem[];
 
   /* ── Widgets ──────────────────────────────────────── */
   const renderWidgets = () => (
@@ -128,29 +158,11 @@ export default function PhoneHomeScreen({
         </p>
         <div className="mt-2 flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full bg-red-400" />
-          <p className="text-foreground/60 text-[10px] truncate">A Special Day 🌸</p>
+          <p className="text-foreground/60 text-[10px] truncate">A Special Day</p>
         </div>
       </motion.div>
     </div>
   );
-
-  /* ── Only real Shundori apps ──────────────────────── */
-  const gridApps = [
-    { id: "photos", label: "Photos", gradient: "linear-gradient(135deg, #f5a623, #f7c948, #7ec8e3, #d96ecf, #e85d75)", icon: <Image className="w-7 h-7 text-white" />, path: "/app/photos" },
-    { id: "memories", label: "Memories", gradient: "linear-gradient(135deg, #ff6b9d, #c44569)", icon: <Heart className="w-7 h-7 text-white" />, path: "/app/memories" },
-    { id: "jhogra", label: "Jhogra", gradient: "linear-gradient(135deg, #a18cd1, #fbc2eb)", icon: <MessageCircle className="w-7 h-7 text-white" />, path: "/app/jhogra" },
-    { id: "first-meet", label: "First Meet", gradient: "linear-gradient(135deg, #4facfe, #00f2fe)", icon: <Clock className="w-7 h-7 text-white" />, path: "/app/first-meet" },
-    { id: "gifts", label: "Gifts", gradient: "linear-gradient(135deg, #f093fb, #f5576c)", icon: <Gift className="w-7 h-7 text-white" />, path: "/app/gifts" },
-    { id: "name-land", label: "Name on Land", gradient: "linear-gradient(135deg, #667eea, #764ba2)", icon: <MapPin className="w-7 h-7 text-white" />, path: "/app/name-on-land" },
-    { id: "settings", label: "Settings", gradient: "linear-gradient(135deg, #8e8e93, #636366)", icon: <Settings className="w-7 h-7 text-white" />, path: "/app/settings" },
-  ];
-
-  const dockApps = [
-    { id: "phone", gradient: "linear-gradient(135deg, #34c759, #30b350)", icon: <span className="text-white text-xl">📞</span> },
-    { id: "safari", gradient: "linear-gradient(135deg, #007aff, #5ac8fa)", icon: <span className="text-white text-xl">🧭</span> },
-    { id: "messages", gradient: "linear-gradient(135deg, #34c759, #30d158)", icon: <span className="text-white text-xl">💬</span> },
-    { id: "music", gradient: "linear-gradient(135deg, #fc3c44, #ff2d55)", icon: <Music className="w-6 h-6 text-white" /> },
-  ];
 
   return (
     <div className="min-h-full flex flex-col relative overflow-hidden">
@@ -187,35 +199,144 @@ export default function PhoneHomeScreen({
             className="w-[22px] h-[11px] rounded-[3px] border relative ml-1"
             style={{ borderColor: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.35)" }}
           >
-            <div
-              className="absolute inset-[2px] rounded-[1.5px]"
-              style={{ width: "78%", background: "#34c759" }}
-            />
+            <div className="absolute inset-[2px] rounded-[1.5px]" style={{ width: "78%", background: "#34c759" }} />
           </div>
         </div>
       </div>
 
       {/* Scrollable content */}
       <div className="relative z-10 flex-1 overflow-y-auto px-5 pt-2 pb-4">
+        {/* Search bar */}
+        <div className="mb-4">
+          <div
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full transition-all"
+            style={{
+              background: searchFocused
+                ? isDark ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.08)"
+                : isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
+            }}
+          >
+            <Search className="w-4 h-4 opacity-40" style={{ color: isDark ? "#fff" : "#000" }} />
+            <input
+              ref={searchRef}
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
+              placeholder="Search apps"
+              className="flex-1 bg-transparent border-none outline-none text-sm placeholder:opacity-30"
+              style={{ color: isDark ? "#fff" : "#000" }}
+            />
+            {search && (
+              <button onClick={() => setSearch("")} className="cursor-pointer">
+                <X className="w-4 h-4 opacity-30" style={{ color: isDark ? "#fff" : "#000" }} />
+              </button>
+            )}
+          </div>
+
+          {/* Search results */}
+          <AnimatePresence>
+            {search.trim() && searchFocused && (
+              <motion.div
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                className="mt-2 rounded-2xl overflow-hidden"
+                style={{
+                  background: isDark ? "rgba(30,30,46,0.95)" : "rgba(255,255,255,0.95)",
+                  backdropFilter: "blur(20px)",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+                }}
+              >
+                {filtered.length > 0 ? (
+                  filtered.map((app) => (
+                    <button
+                      key={app.id}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => openSection(app)}
+                      className="w-full flex items-center gap-3 px-4 py-3 cursor-pointer hover:opacity-80 transition-opacity"
+                      style={{ borderBottom: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.04)" }}
+                    >
+                      <div
+                        className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                        style={{ background: app.gradient }}
+                      >
+                        <span className="scale-[0.6]">{app.icon}</span>
+                      </div>
+                      <span className="text-sm font-medium" style={{ color: isDark ? "#fff" : "#000" }}>
+                        {app.label}
+                      </span>
+                    </button>
+                  ))
+                ) : (
+                  <p className="px-4 py-4 text-xs text-center" style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}>
+                    No apps found
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Widgets */}
         {renderWidgets()}
 
         {/* App grid — 4 cols */}
         <div className="grid grid-cols-4 gap-x-4 gap-y-5 mb-5 px-1">
-          {gridApps.map((app, i) => (
+          {ALL_APPS.map((app, i) => (
             <IosIcon
               key={app.id}
               gradient={app.gradient}
               label={app.label}
               animDelay={0.05 + i * 0.04}
-              onTap={() => openSection(app.id, app.path)}
+              onTap={() => openSection(app)}
             >
               {app.icon}
             </IosIcon>
           ))}
         </div>
 
+        {/* Recent Apps */}
+        {recentApps.length > 0 && (
+          <div className="mb-6 px-1">
+            <p
+              className="text-xs font-semibold uppercase tracking-wider mb-3"
+              style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}
+            >
+              Recently Opened
+            </p>
+            <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
+              {recentApps.map((app) => (
+                <motion.button
+                  key={app.id}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => openSection(app)}
+                  className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl shrink-0 cursor-pointer transition-all"
+                  style={{
+                    background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
+                  }}
+                >
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ background: app.gradient }}
+                  >
+                    <span className="scale-[0.5]">{app.icon}</span>
+                  </div>
+                  <span
+                    className="text-xs font-medium"
+                    style={{ color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)" }}
+                  >
+                    {app.label}
+                  </span>
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Night mode + Logout */}
-        <div className="flex gap-3 px-1 mb-6">
+        <div className="flex gap-3 px-1 mb-4">
           <button
             onClick={onToggleDark}
             className="flex items-center gap-2 px-4 py-2.5 rounded-2xl cursor-pointer transition-all"
@@ -225,7 +346,7 @@ export default function PhoneHomeScreen({
             }}
           >
             {isDark ? <Sun className="w-4 h-4 text-yellow-400" /> : <Moon className="w-4 h-4 text-indigo-500" />}
-            <span className="text-xs font-medium">{isDark ? "Light" : "Night"}</span>
+            <span className="text-xs font-medium">{isDark ? "Light Mode" : "Night Mode"}</span>
           </button>
           <button
             onClick={onLogout}
@@ -238,46 +359,8 @@ export default function PhoneHomeScreen({
         </div>
       </div>
 
-      {/* Search bar */}
-      <div className="relative z-10 px-6 pb-2">
-        <div
-          className="flex items-center gap-2 px-4 py-2.5 rounded-full"
-          style={{ background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)" }}
-        >
-          <svg className="w-4 h-4 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <circle cx="11" cy="11" r="8" />
-            <path d="M21 21l-4.35-4.35" />
-          </svg>
-          <span className="text-xs opacity-30" style={{ color: isDark ? "#fff" : "#000" }}>
-            Search
-          </span>
-        </div>
-      </div>
-
-      {/* Dock */}
-      <div className="relative z-10 px-5 pb-4 pt-1">
-        <div
-          className="flex items-center justify-around rounded-[28px] px-4 py-3"
-          style={{
-            background: isDark ? "rgba(30,30,40,0.75)" : "rgba(255,255,255,0.55)",
-            backdropFilter: "blur(30px)",
-          }}
-        >
-          {dockApps.map((app) => (
-            <motion.button key={app.id} whileTap={{ scale: 0.82 }} className="flex flex-col items-center cursor-pointer">
-              <div
-                className="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center shadow-md"
-                style={{ background: app.gradient }}
-              >
-                {app.icon}
-              </div>
-            </motion.button>
-          ))}
-        </div>
-      </div>
-
       {/* Home indicator */}
-      <div className="relative z-10 flex justify-center pb-2">
+      <div className="relative z-10 flex justify-center pb-3 pt-1">
         <div
           className="w-[134px] h-[5px] rounded-full"
           style={{ background: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)" }}
@@ -302,9 +385,9 @@ export default function PhoneHomeScreen({
             >
               <div
                 className="w-16 h-16 rounded-[18px] flex items-center justify-center shadow-lg"
-                style={{ background: gridApps.find((a) => a.id === openApp)?.gradient || "var(--accent-color)" }}
+                style={{ background: ALL_APPS.find((a) => a.id === openApp)?.gradient || "var(--accent-color)" }}
               >
-                {gridApps.find((a) => a.id === openApp)?.icon}
+                {ALL_APPS.find((a) => a.id === openApp)?.icon}
               </div>
             </motion.div>
           </motion.div>
@@ -325,19 +408,16 @@ export default function PhoneHomeScreen({
               boxShadow: "0 -4px 30px rgba(0,0,0,0.15)",
             }}
           >
-            <div
-              className="w-10 h-1 rounded-full mx-auto mb-4"
+            <div className="w-10 h-1 rounded-full mx-auto mb-4"
               style={{ background: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)" }}
             />
-            <p
-              className="text-center text-sm font-semibold mb-4"
+            <p className="text-center text-sm font-semibold mb-4"
               style={{ color: isDark ? "#fff" : "#000" }}
             >
               Special Dates
             </p>
             <div className="space-y-3">
-              <div
-                className="flex items-center gap-3 p-3 rounded-xl"
+              <div className="flex items-center gap-3 p-3 rounded-xl"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.8)" }}
               >
                 <div className="w-11 h-11 rounded-xl bg-red-500 flex items-center justify-center text-white font-bold text-lg">
@@ -346,16 +426,14 @@ export default function PhoneHomeScreen({
                 <div>
                   <p className="text-sm font-medium" style={{ color: isDark ? "#fff" : "#000" }}>Today</p>
                   <p className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }}>
-                    A special day in your world
+                    A special day
                   </p>
                 </div>
               </div>
-              <div
-                className="flex items-center gap-3 p-3 rounded-xl"
+              <div className="flex items-center gap-3 p-3 rounded-xl"
                 style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.8)" }}
               >
-                <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center text-white font-bold text-lg"
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center text-white font-bold text-lg"
                   style={{ background: "var(--accent-color, #e8a0b4)" }}
                 >
                   4
@@ -363,7 +441,7 @@ export default function PhoneHomeScreen({
                 <div>
                   <p className="text-sm font-medium" style={{ color: isDark ? "#fff" : "#000" }}>May 2003</p>
                   <p className="text-xs" style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }}>
-                    The day that matters most 🌸
+                    The day that matters most
                   </p>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Heart, Plus, Trash2 } from "lucide-react";
+import { X, Heart, Plus, Trash2, Camera } from "lucide-react";
 import { type Photo } from "@/data/shundori-data";
 
 const STORAGE_KEY = "shundori-photos";
@@ -16,6 +16,15 @@ function loadSavedPhotos(): Photo[] {
 
 function savePhotos(photos: Photo[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(photos));
+}
+
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 export default function PhotosSection() {
@@ -41,33 +50,32 @@ export default function PhotosSection() {
     });
   };
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const newPhotos: Photo[] = [];
-
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const newPhoto: Photo = {
+    // Read all files as data URLs (Promise.all — waits for every file)
+    const results = await Promise.all(
+      Array.from(files).map(async (file) => {
+        const src = await readFileAsDataUrl(file);
+        return {
           id: Date.now() + Math.random(),
-          src: ev.target?.result as string,
+          src,
           caption: file.name.replace(/\.[^.]+$/, ""),
-          date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-        };
-        newPhotos.push(newPhoto);
+          date: new Date().toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+        } satisfies Photo;
+      }),
+    );
 
-        // Save after last file
-        if (newPhotos.length === files.length) {
-          setPhotos((prev) => {
-            const next = [...prev, ...newPhotos];
-            savePhotos(next);
-            return next;
-          });
-        }
-      };
-      reader.readAsDataURL(file);
+    // Update state + localStorage in one go
+    setPhotos((prev) => {
+      const next = [...prev, ...results];
+      savePhotos(next);
+      return next;
     });
 
     // Reset input so same file can be re-selected
@@ -95,7 +103,9 @@ export default function PhotosSection() {
         Photos
       </motion.h2>
       <p className="text-foreground/40 text-sm mb-6">
-        {photos.length > 0 ? `${photos.length} photo${photos.length > 1 ? "s" : ""}` : "Your favorite moments."}
+        {photos.length > 0
+          ? `${photos.length} photo${photos.length > 1 ? "s" : ""}`
+          : "Your favorite moments."}
       </p>
 
       {/* Add photo button */}
@@ -104,11 +114,14 @@ export default function PhotosSection() {
         animate={{ opacity: 1 }}
         whileTap={{ scale: 0.96 }}
         onClick={() => fileInputRef.current?.click()}
-        className="w-full mb-5 py-4 rounded-2xl border-2 border-dashed flex items-center justify-center gap-2 cursor-pointer transition-colors card-glass"
+        className="w-full mb-5 py-4 rounded-2xl border-2 border-dashed flex items-center justify-center gap-2.5 cursor-pointer transition-colors card-glass"
         style={{ borderColor: "var(--accent-color, #e8a0b4)" }}
       >
-        <Plus className="w-5 h-5" style={{ color: "var(--accent-color, #e8a0b4)" }} />
-        <span className="text-sm font-semibold" style={{ color: "var(--accent-color, #e8a0b4)" }}>
+        <Camera className="w-5 h-5" style={{ color: "var(--accent-color, #e8a0b4)" }} />
+        <span
+          className="text-sm font-semibold"
+          style={{ color: "var(--accent-color, #e8a0b4)" }}
+        >
           Add Photos
         </span>
       </motion.button>
@@ -130,31 +143,48 @@ export default function PhotosSection() {
         >
           <div
             className="w-20 h-20 rounded-[22px] mx-auto mb-4 flex items-center justify-center"
-            style={{ background: "var(--accent-color, #e8a0b4)", opacity: 0.15 }}
+            style={{
+              background: "var(--accent-color, #e8a0b4)",
+              opacity: 0.12,
+            }}
           >
-            <Plus className="w-8 h-8" style={{ color: "var(--accent-color, #e8a0b4)", opacity: 0.6 }} />
+            <Camera
+              className="w-8 h-8"
+              style={{
+                color: "var(--accent-color, #e8a0b4)",
+                opacity: 0.5,
+              }}
+            />
           </div>
-          <p className="text-foreground/50 text-sm font-medium mb-1">No photos yet</p>
-          <p className="text-foreground/30 text-xs">Tap "Add Photos" to start your collection</p>
+          <p className="text-foreground/50 text-sm font-medium mb-1">
+            No photos yet
+          </p>
+          <p className="text-foreground/30 text-xs">
+            Tap "Add Photos" to start your collection
+          </p>
         </motion.div>
       )}
 
-      {/* Photo grid */}
+      {/* Photo grid — shows right below the Add button */}
       {photos.length > 0 && (
         <div className="grid grid-cols-2 gap-3">
           {photos.map((p, i) => (
             <motion.div
               key={p.id}
+              layout
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.05 }}
+              transition={{ delay: i * 0.04 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => setSelected(p.id)}
               className="relative aspect-square rounded-2xl overflow-hidden cursor-pointer shadow-sm group"
             >
-              {/* Image */}
               {p.src ? (
-                <img src={p.src} alt={p.caption} className="absolute inset-0 w-full h-full object-cover" />
+                <img
+                  src={p.src}
+                  alt={p.caption}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
               ) : (
                 <div
                   className="absolute inset-0"
@@ -164,23 +194,26 @@ export default function PhotosSection() {
                 />
               )}
 
-              {/* Caption overlay */}
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/50 to-transparent p-3 pt-8">
-                <p className="text-white text-xs font-medium truncate">{p.caption}</p>
+                <p className="text-white text-xs font-medium truncate">
+                  {p.caption}
+                </p>
                 <p className="text-white/60 text-[10px]">{p.date}</p>
               </div>
 
-              {/* Favorite icon */}
               <button
                 onClick={(e) => toggleFav(p.id, e)}
                 className="absolute top-2 right-2 p-1.5 rounded-full bg-black/20 backdrop-blur-sm cursor-pointer"
               >
                 <Heart
-                  className={`w-3.5 h-3.5 ${favorites.has(p.id) ? "fill-red-400 text-red-400" : "text-white/70"}`}
+                  className={`w-3.5 h-3.5 ${
+                    favorites.has(p.id)
+                      ? "fill-red-400 text-red-400"
+                      : "text-white/70"
+                  }`}
                 />
               </button>
 
-              {/* Delete button */}
               <button
                 onClick={(e) => deletePhoto(p.id, e)}
                 className="absolute top-2 left-2 p-1.5 rounded-full bg-black/30 backdrop-blur-sm cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
@@ -202,7 +235,6 @@ export default function PhotosSection() {
             className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center"
             onClick={() => setSelected(null)}
           >
-            {/* Close button */}
             <button
               onClick={() => setSelected(null)}
               className="absolute top-12 right-6 p-2 text-white/70 hover:text-white cursor-pointer z-10"
@@ -210,7 +242,6 @@ export default function PhotosSection() {
               <X className="w-7 h-7" />
             </button>
 
-            {/* Image */}
             <motion.div
               initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -219,18 +250,23 @@ export default function PhotosSection() {
               onClick={(e) => e.stopPropagation()}
             >
               {photo.src && (
-                <img src={photo.src} alt={photo.caption} className="w-full h-full object-contain" />
+                <img
+                  src={photo.src}
+                  alt={photo.caption}
+                  className="w-full h-full object-contain"
+                />
               )}
             </motion.div>
 
-            {/* Caption */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               className="mt-5 text-center px-6"
             >
-              <p className="text-white text-base font-medium">{photo.caption}</p>
+              <p className="text-white text-base font-medium">
+                {photo.caption}
+              </p>
               <p className="text-white/50 text-sm mt-1">{photo.date}</p>
             </motion.div>
           </motion.div>
