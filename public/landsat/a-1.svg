@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="280" viewBox="0 0 200 280">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2d5a1e"/>
+      <stop offset="50%" stop-color="#5a8c3a"/>
+      <stop offset="100%" stop-color="#c4a265"/>
+    </linearGradient>
+    <pattern id="grid" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="none"/>
+      <rect width="1" height="1" fill="rgba(0,0,0,0.04)"/>
+    </pattern>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="650"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" mode="multiply" result="blend"/>
+    </filter>
+  </defs>
+  <rect width="200" height="280" rx="8" fill="url(#bg)"/>
+  <rect width="200" height="280" rx="8" fill="url(#grid)"/>
+  <rect width="200" height="280" rx="8" fill="url(#bg)" filter="url(#noise)" opacity="0.15"/>
+  <text x="100" y="160" text-anchor="middle" dominant-baseline="central" 
+    font-family="Georgia, serif" font-size="120" font-weight="bold" fill="white" 
+    style="text-shadow: 0 4px 20px rgba(0,0,0,0.5)" opacity="0.9">A</text>
+  <rect x="0" y="240" width="200" height="40" rx="0" fill="rgba(0,0,0,0.6)"/>
+  <text x="10" y="258" font-family="-apple-system, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">Hickman, Kentucky</text>
+  <text x="10" y="272" font-family="-apple-system, sans-serif" font-size="8" fill="rgba(255,255,255,0.5)">36°35'N · 89°20'W · Landsat 8</text>
+</svg>

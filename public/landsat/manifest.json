@@ -1,0 +1,522 @@
+{
+  "A": [
+    {
+      "file": "/landsat/a-1.svg",
+      "loc": "Hickman, Kentucky",
+      "coords": "36\u00b035'N \u00b7 89\u00b020'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/a-2.svg",
+      "loc": "Yukon Delta, Alaska",
+      "coords": "62\u00b033'N \u00b7 164\u00b056'W",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/a-3.svg",
+      "loc": "Lake Mj\u00f8sa, Norway",
+      "coords": "60\u00b045'N \u00b7 10\u00b056'E",
+      "sat": "Landsat 7"
+    }
+  ],
+  "B": [
+    {
+      "file": "/landsat/b-1.svg",
+      "loc": "Humait\u00e1, Brazil",
+      "coords": "7\u00b037'S \u00b7 62\u00b055'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/b-2.svg",
+      "loc": "Holla Bend, Arkansas",
+      "coords": "35\u00b008'N \u00b7 93\u00b003'W",
+      "sat": "Landsat 7"
+    },
+    {
+      "file": "/landsat/b-3.svg",
+      "loc": "Fonte Boa, Brazil",
+      "coords": "2\u00b026'S \u00b7 66\u00b016'W",
+      "sat": "Landsat 9"
+    }
+  ],
+  "C": [
+    {
+      "file": "/landsat/c-1.svg",
+      "loc": "False River, Louisiana",
+      "coords": "30\u00b056'N \u00b7 91\u00b005'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/c-2.svg",
+      "loc": "Black Rock Desert, NV",
+      "coords": "40\u00b047'N \u00b7 119\u00b012'W",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/c-3.svg",
+      "loc": "Deception Island",
+      "coords": "62\u00b057'S \u00b7 60\u00b038'W",
+      "sat": "Landsat 7"
+    }
+  ],
+  "D": [
+    {
+      "file": "/landsat/d-1.svg",
+      "loc": "Lake Tandou, Australia",
+      "coords": "32\u00b037'S \u00b7 142\u00b004'E",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/d-2.svg",
+      "loc": "Akimiski Island",
+      "coords": "53\u00b000'N \u00b7 81\u00b018'W",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/d-3.svg",
+      "loc": "Manicouagan",
+      "coords": "51\u00b022'N \u00b7 68\u00b040'W",
+      "sat": "Landsat 7"
+    }
+  ],
+  "E": [
+    {
+      "file": "/landsat/e-1.svg",
+      "loc": "Brei\u00f0amerkurj\u00f6kull, Iceland",
+      "coords": "64\u00b005'N \u00b7 16\u00b021'W",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/e-2.svg",
+      "loc": "Bellona Plateau",
+      "coords": "20\u00b030'S \u00b7 158\u00b030'E",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/e-3.svg",
+      "loc": "Sea of Okhotsk",
+      "coords": "54\u00b042'N \u00b7 136\u00b034'E",
+      "sat": "Landsat 7"
+    }
+  ],
+  "F": [
+    {
+      "file": "/landsat/f-1.svg",
+      "loc": "Kruger National Park",
+      "coords": "28\u00b044'S \u00b7 29\u00b012'E",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/f-2.svg",
+      "loc": "Mato Grosso, Brazil",
+      "coords": "13\u00b050'S \u00b7 55\u00b017'W",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/f-3.svg",
+      "loc": "Firn-filled Fjords",
+      "coords": "29\u00b015'N \u00b7 96\u00b019'E",
+      "sat": "Landsat 7"
+    }
+  ],
+  "G": [
+    {
+      "file": "/landsat/g-1.svg",
+      "loc": "Fonte Boa, Amazonas",
+      "coords": "2\u00b026'S \u00b7 66\u00b016'W",
+      "sat": "Landsat 7"
+    },
+    {
+      "file": "/landsat/g-2.svg",
+      "loc": "S\u00e3o Paulo farmland",
+      "coords": "20\u00b0S \u00b7 48\u00b0W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/g-3.svg",
+      "loc": "Amazon basin",
+      "coords": "3\u00b0S \u00b7 60\u00b0W",
+      "sat": "Landsat 9"
+    }
+  ],
+  "H": [
+    {
+      "file": "/landsat/h-1.svg",
+      "loc": "Khorinsky District",
+      "coords": "52\u00b002'N \u00b7 109\u00b046'E",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/h-2.svg",
+      "loc": "Kyrgyzstan",
+      "coords": "40\u00b014'N \u00b7 71\u00b014'E",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/h-3.svg",
+      "loc": "Siberian steppe",
+      "coords": "55\u00b0N \u00b7 100\u00b0E",
+      "sat": "Landsat 7"
+    }
+  ],
+  "I": [
+    {
+      "file": "/landsat/i-1.svg",
+      "loc": "Holuhraun Lava Field",
+      "coords": "64\u00b051'N \u00b7 16\u00b049'W",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/i-2.svg",
+      "loc": "Djebel Ouarkziz",
+      "coords": "28\u00b018'N \u00b7 10\u00b033'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/i-3.svg",
+      "loc": "Etosha, Namibia",
+      "coords": "18\u00b029'S \u00b7 16\u00b010'E",
+      "sat": "Landsat 7"
+    }
+  ],
+  "J": [
+    {
+      "file": "/landsat/j-1.svg",
+      "loc": "Lake Superior",
+      "coords": "46\u00b041'N \u00b7 90\u00b023'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/j-2.svg",
+      "loc": "Karakaya Dam",
+      "coords": "38\u00b029'N \u00b7 38\u00b026'E",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/j-3.svg",
+      "loc": "Great Barrier Reef",
+      "coords": "18\u00b020'S \u00b7 146\u00b050'E",
+      "sat": "Landsat 7"
+    }
+  ],
+  "K": [
+    {
+      "file": "/landsat/k-1.svg",
+      "loc": "Golmud, China",
+      "coords": "35\u00b036'N \u00b7 95\u00b003'E",
+      "sat": "Landsat 7"
+    },
+    {
+      "file": "/landsat/k-2.svg",
+      "loc": "Sirmilik, Canada",
+      "coords": "72\u00b005'N \u00b7 76\u00b048'W",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/k-3.svg",
+      "loc": "Tibetan plateau",
+      "coords": "33\u00b0N \u00b7 90\u00b0E",
+      "sat": "Landsat 8"
+    }
+  ],
+  "L": [
+    {
+      "file": "/landsat/l-1.svg",
+      "loc": "Regina, Saskatchewan",
+      "coords": "50\u00b012'N \u00b7 104\u00b043'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/l-2.svg",
+      "loc": "Xinjiang, China",
+      "coords": "40\u00b004'N \u00b7 77\u00b040'E",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/l-3.svg",
+      "loc": "Nusantara, Indonesia",
+      "coords": "0\u00b058'S \u00b7 116\u00b041'E",
+      "sat": "Landsat 7"
+    }
+  ],
+  "M": [
+    {
+      "file": "/landsat/m-1.svg",
+      "loc": "Tian Shan Mountains",
+      "coords": "42\u00b007'N \u00b7 80\u00b002'E",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/m-2.svg",
+      "loc": "Potomac River",
+      "coords": "38\u00b046'N \u00b7 78\u00b024'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/m-3.svg",
+      "loc": "Shenandoah River",
+      "coords": "38\u00b046'N \u00b7 78\u00b024'W",
+      "sat": "Landsat 7"
+    }
+  ],
+  "N": [
+    {
+      "file": "/landsat/n-1.svg",
+      "loc": "S\u00e3o Miguel do Araguaia",
+      "coords": "12\u00b056'S \u00b7 50\u00b029'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/n-2.svg",
+      "loc": "Yapacani, Bolivia",
+      "coords": "17\u00b018'S \u00b7 63\u00b053'W",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/n-3.svg",
+      "loc": "Araguaia River",
+      "coords": "13\u00b0S \u00b7 50\u00b0W",
+      "sat": "Landsat 7"
+    }
+  ],
+  "O": [
+    {
+      "file": "/landsat/o-1.svg",
+      "loc": "Manicouagan Reservoir",
+      "coords": "51\u00b022'N \u00b7 68\u00b040'W",
+      "sat": "Landsat 7"
+    },
+    {
+      "file": "/landsat/o-2.svg",
+      "loc": "Crater Lake, Oregon",
+      "coords": "42\u00b056'N \u00b7 122\u00b006'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/o-3.svg",
+      "loc": "Lonar Crater, India",
+      "coords": "19\u00b058'N \u00b7 76\u00b030'E",
+      "sat": "Landsat 9"
+    }
+  ],
+  "P": [
+    {
+      "file": "/landsat/p-1.svg",
+      "loc": "Riberalta, Bolivia",
+      "coords": "10\u00b052'S \u00b7 66\u00b002'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/p-2.svg",
+      "loc": "Mackenzie Delta",
+      "coords": "68\u00b012'N \u00b7 134\u00b023'W",
+      "sat": "Landsat 7"
+    },
+    {
+      "file": "/landsat/p-3.svg",
+      "loc": "Bolivian Amazon",
+      "coords": "11\u00b0S \u00b7 66\u00b0W",
+      "sat": "Landsat 9"
+    }
+  ],
+  "Q": [
+    {
+      "file": "/landsat/q-1.svg",
+      "loc": "Mount Tambora",
+      "coords": "8\u00b014'S \u00b7 117\u00b059'E",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/q-2.svg",
+      "loc": "Lonar Crater, India",
+      "coords": "19\u00b058'N \u00b7 76\u00b030'E",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/q-3.svg",
+      "loc": "Volcanic complex",
+      "coords": "8\u00b0S \u00b7 118\u00b0E",
+      "sat": "Landsat 7"
+    }
+  ],
+  "R": [
+    {
+      "file": "/landsat/r-1.svg",
+      "loc": "Canyonlands, Utah",
+      "coords": "38\u00b026'N \u00b7 109\u00b045'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/r-2.svg",
+      "loc": "Florida Keys",
+      "coords": "24\u00b045'N \u00b7 81\u00b031'W",
+      "sat": "Landsat 7"
+    },
+    {
+      "file": "/landsat/r-3.svg",
+      "loc": "Sondrio, Italy",
+      "coords": "46\u00b017'N \u00b7 9\u00b025'E",
+      "sat": "Landsat 9"
+    }
+  ],
+  "S": [
+    {
+      "file": "/landsat/s-1.svg",
+      "loc": "Rio Chapare, Bolivia",
+      "coords": "16\u00b056'S \u00b7 65\u00b013'W",
+      "sat": "Landsat 7"
+    },
+    {
+      "file": "/landsat/s-2.svg",
+      "loc": "N'Djamena, Chad",
+      "coords": "12\u00b000'N \u00b7 15\u00b003'E",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/s-3.svg",
+      "loc": "Mackenzie River",
+      "coords": "68\u00b025'N \u00b7 134\u00b008'W",
+      "sat": "Landsat 9"
+    }
+  ],
+  "T": [
+    {
+      "file": "/landsat/t-1.svg",
+      "loc": "Lena River Delta",
+      "coords": "72\u00b052'N \u00b7 129\u00b031'E",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/t-2.svg",
+      "loc": "Liwa, UAE",
+      "coords": "23\u00b010'N \u00b7 53\u00b047'E",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/t-3.svg",
+      "loc": "Arctic tundra",
+      "coords": "70\u00b0N \u00b7 130\u00b0E",
+      "sat": "Landsat 7"
+    }
+  ],
+  "U": [
+    {
+      "file": "/landsat/u-1.svg",
+      "loc": "Bamforth NWR, Wyoming",
+      "coords": "41\u00b019'N \u00b7 105\u00b046'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/u-2.svg",
+      "loc": "Canyonlands, Utah",
+      "coords": "38\u00b016'N \u00b7 109\u00b055'W",
+      "sat": "Landsat 7"
+    },
+    {
+      "file": "/landsat/u-3.svg",
+      "loc": "High desert",
+      "coords": "41\u00b0N \u00b7 106\u00b0W",
+      "sat": "Landsat 9"
+    }
+  ],
+  "V": [
+    {
+      "file": "/landsat/v-1.svg",
+      "loc": "Padma River, Bangladesh",
+      "coords": "23\u00b021'N \u00b7 90\u00b033'E",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/v-2.svg",
+      "loc": "Mapleton, Maine",
+      "coords": "46\u00b032'N \u00b7 68\u00b015'W",
+      "sat": "Landsat 7"
+    },
+    {
+      "file": "/landsat/v-3.svg",
+      "loc": "New South Wales",
+      "coords": "34\u00b017'S \u00b7 150\u00b049'E",
+      "sat": "Landsat 9"
+    }
+  ],
+  "W": [
+    {
+      "file": "/landsat/w-1.svg",
+      "loc": "La Primavera, Colombia",
+      "coords": "5\u00b026'N \u00b7 69\u00b047'W",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/w-2.svg",
+      "loc": "Ponoy River, Russia",
+      "coords": "67\u00b002'N \u00b7 40\u00b020'E",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/w-3.svg",
+      "loc": "Tropical lowland",
+      "coords": "5\u00b0N \u00b7 70\u00b0W",
+      "sat": "Landsat 7"
+    }
+  ],
+  "X": [
+    {
+      "file": "/landsat/x-1.svg",
+      "loc": "Sermersooq, Greenland",
+      "coords": "66\u00b037'N \u00b7 36\u00b022'W",
+      "sat": "Landsat 7"
+    },
+    {
+      "file": "/landsat/x-2.svg",
+      "loc": "Davis Strait",
+      "coords": "62\u00b014'N \u00b7 49\u00b034'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/x-3.svg",
+      "loc": "Wolstenholme Fjord",
+      "coords": "76\u00b044'N \u00b7 68\u00b036'W",
+      "sat": "Landsat 9"
+    }
+  ],
+  "Y": [
+    {
+      "file": "/landsat/y-1.svg",
+      "loc": "Tasman Glacier, NZ",
+      "coords": "43\u00b031'S \u00b7 170\u00b049'E",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/y-2.svg",
+      "loc": "Estuario de Virrila",
+      "coords": "5\u00b051'S \u00b7 80\u00b043'W",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/y-3.svg",
+      "loc": "B\u00edob\u00edo River, Chile",
+      "coords": "37\u00b016'S \u00b7 72\u00b043'W",
+      "sat": "Landsat 7"
+    }
+  ],
+  "Z": [
+    {
+      "file": "/landsat/z-1.svg",
+      "loc": "Mohammed Boudiaf",
+      "coords": "34\u00b059'N \u00b7 4\u00b023'E",
+      "sat": "Landsat 9"
+    },
+    {
+      "file": "/landsat/z-2.svg",
+      "loc": "Primavera do Leste",
+      "coords": "15\u00b029'S \u00b7 54\u00b020'W",
+      "sat": "Landsat 8"
+    },
+    {
+      "file": "/landsat/z-3.svg",
+      "loc": "Saharan edge",
+      "coords": "35\u00b0N \u00b7 4\u00b0E",
+      "sat": "Landsat 7"
+    }
+  ]
+}
