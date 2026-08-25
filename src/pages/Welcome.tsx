@@ -33,7 +33,7 @@ export default function Welcome() {
   const moveNoButton = useCallback(() => {
     const next = noClicks + 1;
     setNoClicks(next);
-    if (next >= 5) {
+    if (next >= 1) {
       setButtonsGone(true);
       return;
     }
