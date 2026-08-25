@@ -7,7 +7,24 @@ import DynamicIsland from "@/components/shundori/DynamicIsland";
 
 function normalizeDate(s: string): string {
   const trimmed = s.trim();
-  if (trimmed === LOGIN_PASSWORD) return LOGIN_PASSWORD;
+  if (!trimmed) return "";
+  // Direct match
+  if (trimmed.toLowerCase() === LOGIN_PASSWORD.toLowerCase()) return LOGIN_PASSWORD;
+  // Parse DD/MM/YYYY or DD-MM-YYYY or DD.MM.YYYY → 4May2003 format
+  const sep = /[\/\-\.]/.test(trimmed) ? trimmed.match(/[\/\-\.]/)?.[0] : null;
+  if (sep) {
+    const parts = trimmed.split(sep);
+    if (parts.length === 3) {
+      const monthNames = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
+      if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year === 2003 && month === 5 && day === 4) {
+        return LOGIN_PASSWORD;
+      }
+    }
+  }
+  // Word-based: strip non-alpha-numeric and compare
   const stripped = trimmed.replace(/[^\w]/g, "").toLowerCase();
   const target = LOGIN_PASSWORD.replace(/[^\w]/g, "").toLowerCase();
   return stripped === target ? LOGIN_PASSWORD : trimmed;
