@@ -50,7 +50,7 @@ export default function JhograSection() {
   if (viewing) {
     const isEditing = editId === viewing.id;
     return (
-      <div className="min-h-full px-5 pt-2 pb-4">
+      <div className="px-5 pt-2 pb-4 overflow-hidden">
         <div className="flex items-center gap-3 mb-6">
           <button onClick={() => { setViewId(null); setEditId(null); }} className="p-2 rounded-xl cursor-pointer bg-transparent border-none" style={{ color: "var(--accent-color, #d99aa3)" }} aria-label="Go back">
             <ArrowLeft className="w-5 h-5" />
@@ -66,7 +66,7 @@ export default function JhograSection() {
           </button>
         </div>
 
-        <div className="p-5 rounded-2xl" style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}>
+        <div className="p-5 rounded-2xl overflow-hidden" style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}>
           <div className="flex items-center gap-3 mb-4">
             <span className="text-2xl">{viewing.emoji}</span>
           </div>
@@ -88,8 +88,8 @@ export default function JhograSection() {
             </div>
           ) : (
             <div>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: isDark ? "#f2f2f7" : "#1c1c1e" }}>{viewing.title}</h2>
-              <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>{viewing.description}</p>
+              <h2 className="text-lg font-semibold mb-3 break-words" style={{ color: isDark ? "#f2f2f7" : "#1c1c1e", wordBreak: "break-word" }}>{viewing.title}</h2>
+              <p className="text-sm leading-relaxed break-words overflow-hidden" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)", wordBreak: "break-word", overflowWrap: "break-word" }}>{viewing.description}</p>
             </div>
           )}
         </div>

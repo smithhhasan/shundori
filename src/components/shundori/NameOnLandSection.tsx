@@ -6,7 +6,7 @@ import { appData } from "@/data/shundori-data";
 const NASA_URL = "https://science.nasa.gov/specials/your-name-in-landsat/";
 
 export default function NameOnLandSection() {
-  const isDark = localStorage.getItem("shundori-dark") === "true";
+  const isDark = localStorage.getItem("shundori:darkMode") === "true";
   const [name, setName] = useState("");
 
   const openNASA = () => {
@@ -21,7 +21,7 @@ export default function NameOnLandSection() {
       </p>
 
       {/* Landscape preview with name */}
-      <div className="relative rounded-3xl overflow-hidden h-[50vh] min-h-[320px] flex items-center justify-center mb-5"
+      <div className="relative rounded-3xl overflow-hidden h-[50vh] min-h-[280px] max-h-[380px] flex items-center justify-center mb-5"
         style={{ background: "linear-gradient(135deg, #2d5016 0%, #4a7c32 20%, #8fbc5a 35%, #c4a265 50%, #8b6914 65%, #3d6b2e 80%, #1a3a0a 100%)" }}>
         {/* Satellite texture overlay */}
         <div className="absolute inset-0" style={{
@@ -34,12 +34,12 @@ export default function NameOnLandSection() {
         }} />
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }} className="relative z-10 text-center px-6">
+          transition={{ duration: 0.8 }} className="relative z-10 text-center px-6 overflow-hidden w-full">
           <p className="text-sm mb-3" style={{ color: "rgba(255,255,255,0.7)", fontStyle: "italic" }}>
             Some names deserve a place of their own.
           </p>
-          <h1 className="text-[26px] font-bold tracking-tight leading-tight mb-5"
-            style={{ color: "#fff", textShadow: "0 4px 30px rgba(0,0,0,0.5)", letterSpacing: "0.02em" }}>
+          <h1 className="text-[26px] font-bold tracking-tight leading-tight mb-5 break-all max-w-full overflow-hidden"
+            style={{ color: "#fff", textShadow: "0 4px 30px rgba(0,0,0,0.5)", letterSpacing: "0.02em", wordBreak: "break-word", overflowWrap: "break-word", textOverflow: "ellipsis" }}>
             {name.trim() ? name.trim().toUpperCase() : appData.personName}
           </h1>
           <div className="flex items-center justify-center gap-2 mb-6">
