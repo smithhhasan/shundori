@@ -31,6 +31,9 @@ const COMPOSITES: Record<string, Composite[]> = {
 
 const NASA_URL = "https://science.nasa.gov/specials/your-name-in-landsat/";
 
+// Only these exact names are supported (case-insensitive)
+const VALID_NAMES = new Set(["QUAZI", "ZARIN", "SUBAH"]);
+
 export default function NameOnLandSection() {
   const navigate = useNavigate();
   const isDark = localStorage.getItem("shundori:darkMode") === "true";
@@ -42,7 +45,9 @@ export default function NameOnLandSection() {
 
   const getComposite = useCallback((): Composite | null => {
     if (!displayName) return null;
-    const upper = displayName.toUpperCase().replace(/[^A-Z]/g, "");
+    const upper = displayName.toUpperCase().trim();
+    // Only exact matches for valid names
+    if (!VALID_NAMES.has(upper)) return null;
     const list = COMPOSITES[upper];
     if (!list) return null;
     return list[variantIdx % list.length];
@@ -51,7 +56,7 @@ export default function NameOnLandSection() {
   const handleSubmit = useCallback(() => {
     const trimmed = inputName.trim();
     if (!trimmed) return;
-    setDisplayName(trimmed.toUpperCase().replace(/[^A-Z]/g, ""));
+    setDisplayName(trimmed);
     setSubmitted(true);
   }, [inputName]);
 
@@ -179,14 +184,20 @@ export default function NameOnLandSection() {
         </motion.div>
       )}
 
-      {/* Empty state */}
+      {/* Empty state — name not available */}
       {!composite && submitted && (
         <div className="text-center py-10 mb-5">
-          <p className="text-sm mb-2" style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)" }}>
-            No satellite imagery found for "{displayName}"
+          <div className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center" style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}>
+            <span className="text-lg">🛰️</span>
+          </div>
+          <p className="text-sm font-medium mb-1" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>
+            Name not available
           </p>
-          <p className="text-[11px]" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)" }}>
-            Try QUAZI, ZARIN, or SUBAH
+          <p className="text-[12px] mb-1" style={{ color: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}>
+            Satellite imagery is only available for
+          </p>
+          <p className="text-[12px] font-semibold" style={{ color: "var(--accent-color, #d99aa3)" }}>
+            QUAZI · ZARIN · SUBAH
           </p>
         </div>
       )}
@@ -235,6 +246,19 @@ export default function NameOnLandSection() {
         <p className="text-center text-[11px]" style={{ color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)" }}>
           Supported names: QUAZI · ZARIN · SUBAH
         </p>
+
+        {/* Optional NASA reference link */}
+        <div className="text-center mt-2">
+          <a
+            href={NASA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] underline"
+            style={{ color: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)" }}
+          >
+            Or check your name on NASA directly ↗
+          </a>
+        </div>
       </div>
     </div>
   );
