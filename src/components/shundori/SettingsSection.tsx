@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { THEMES, type ThemeName, appData, STORAGE } from "@/data/shundori-data";
-import { Palette, Type, Sun, Moon, RotateCcw, Lock, Clock, Download } from "lucide-react";
+import { Palette, Type, Sun, Moon, RotateCcw, Lock, Clock, Download, LogOut } from "lucide-react";
 
 interface Props {
   currentTheme: ThemeName; onThemeChange: (t: ThemeName) => void;
   customName: string; onNameChange: (n: string) => void; onReset: () => void;
   isDark: boolean; onToggleDark: () => void;
   onReLock: () => void; sessionTimeout: number; onSessionTimeoutChange: (m: number) => void;
-  onExport: () => void;
+  onExport: () => void; onLogout: () => void;
 }
 
 export default function SettingsSection({
   currentTheme, onThemeChange, customName, onNameChange, onReset,
-  isDark, onToggleDark, onReLock, sessionTimeout, onSessionTimeoutChange, onExport,
+  isDark, onToggleDark, onReLock, sessionTimeout, onSessionTimeoutChange, onExport, onLogout,
 }: Props) {
   const [editingName, setEditingName] = useState(false);
   const [nameVal, setNameVal] = useState(customName);
@@ -140,6 +140,15 @@ export default function SettingsSection({
             <span className="text-sm" style={{ color: text }}>Export backup</span>
           </button>
         </div>
+      </Section>
+
+      {/* Sign Out */}
+      <Section bg={bg} border={border}>
+        <button onClick={onLogout}
+          className="w-full flex items-center gap-3 py-3 cursor-pointer bg-transparent border-none">
+          <LogOut className="w-4 h-4" style={{ color: "#ef4444" }} />
+          <span className="text-sm" style={{ color: "#ef4444" }}>Sign Out</span>
+        </button>
       </Section>
 
       {/* Reset */}

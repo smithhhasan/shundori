@@ -139,7 +139,7 @@ export default function ShundoriApp() {
       <SettingsSection currentTheme={theme} onThemeChange={handleThemeChange} customName={customName}
         onNameChange={handleNameChange} onReset={handleReset} isDark={isDark} onToggleDark={handleToggleDark}
         onReLock={handleReLock} sessionTimeout={sessionTimeout} onSessionTimeoutChange={handleSessionTimeoutChange}
-        onExport={handleExport} />
+        onExport={handleExport} onLogout={handleLogout} />
     );
     if (p === "/app/more") return <MorePage onNavigate={navigate} />;
     return <HomeSection />;
@@ -157,7 +157,7 @@ export default function ShundoriApp() {
           <motion.div key={location.pathname} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.2 }}>
             {isHomePage ? (
-              <PhoneHomeScreen onLogout={handleLogout} onToggleDark={handleToggleDark} isDark={isDark} currentTheme={theme} onThemeChange={handleThemeChange} />
+              <PhoneHomeScreen onToggleDark={handleToggleDark} isDark={isDark} currentTheme={theme} onThemeChange={handleThemeChange} />
             ) : renderSection()}
           </motion.div>
         </AnimatePresence>

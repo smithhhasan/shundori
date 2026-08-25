@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Image, Heart, MessageCircle, Clock, Gift, MapPin, Settings, Cloud, LogOut, Search, X } from "lucide-react";
+import { Image, Heart, MessageCircle, Clock, Gift, MapPin, Settings, Cloud, Search, X } from "lucide-react";
 import { useNavigate } from "react-router";
 import { type ThemeName, appData, STORAGE } from "@/data/shundori-data";
 
-interface Props { onLogout: () => void; onToggleDark: () => void; isDark: boolean; currentTheme: ThemeName; onThemeChange: (t: ThemeName) => void; }
+interface Props { onToggleDark: () => void; isDark: boolean; currentTheme: ThemeName; onThemeChange: (t: ThemeName) => void; }
 
 const ALL_APPS = [
   { id: "photos", label: "Photos", gradient: "linear-gradient(135deg, #f5a623, #f7c948, #7ec8e3, #d96ecf, #e85d75)", icon: <Image className="w-7 h-7 text-white" />, path: "/app/photos" },
@@ -89,7 +89,7 @@ function SwipeToDismiss({ children, onDismiss, prefersReduced }: { children: Rea
   );
 }
 
-export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Props) {
+export default function PhoneHomeScreen({ onToggleDark, isDark }: Props) {
   const navigate = useNavigate();
   const [openApp, setOpenApp] = useState<string | null>(null);
   const [sheetApp, setSheetApp] = useState<string | null>(null);
@@ -246,14 +246,7 @@ export default function PhoneHomeScreen({ onLogout, onToggleDark, isDark }: Prop
           </div>
         )}
 
-        {/* Log Out */}
-        <div className="px-1 mb-4">
-          <button onClick={onLogout} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl cursor-pointer transition-all bg-transparent border-none focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-            style={{ background: "rgba(239,68,68,0.1)", color: "#ef4444" }}>
-            <LogOut className="w-4 h-4" />
-            <span className="text-xs font-medium">Log Out</span>
-          </button>
-        </div>
+
       </div>
 
       {/* Home indicator */}
