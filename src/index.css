@@ -199,3 +199,23 @@ body {
 .photo-placeholder {
   background: linear-gradient(135deg, var(--accent-color)33, var(--accent-color)11);
 }
+
+/* iPhone home indicator */
+.home-indicator {
+  width: 134px;
+  height: 5px;
+  border-radius: 999px;
+  margin: 0 auto;
+  background: rgba(0,0,0,0.15);
+}
+.dark .home-indicator {
+  background: rgba(255,255,255,0.2);
+}
+
+/* iOS app label color */
+:root {
+  --app-label-color: rgba(0,0,0,0.75);
+}
+.dark {
+  --app-label-color: rgba(255,255,255,0.85);
+}
