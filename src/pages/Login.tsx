@@ -99,8 +99,8 @@ export default function Login() {
             <User className="w-4 h-4 shrink-0" style={{ color: "var(--mauve, #8a5a67)" }} />
             <input type="text" placeholder="Your name" value={name}
               onChange={(e) => { setName(e.target.value); setError(""); }}
-              className="flex-1 bg-transparent border-none outline-none text-sm"
-              style={{ color: "var(--ivory, #1c1c1e)", fontFamily: "-apple-system, 'SF Pro Text', sans-serif" }}
+              className="flex-1 bg-transparent border-none outline-none text-sm placeholder:text-black/30"
+              style={{ color: "#1c1c1e", fontFamily: "-apple-system, 'SF Pro Text', sans-serif" }}
               aria-label="Name" autoComplete="name" aria-required="true" />
           </div>
 
@@ -111,8 +111,8 @@ export default function Login() {
               <Lock className="w-4 h-4 shrink-0" style={{ color: "var(--mauve, #8a5a67)" }} />
               <input type={showPassword ? "text" : "password"} placeholder="Password (hint: a special date)"
                 value={password} onChange={(e) => { setPassword(e.target.value); setError(""); }}
-                className="flex-1 bg-transparent border-none outline-none text-sm"
-                style={{ color: "var(--ivory, #1c1c1e)", fontFamily: "-apple-system, 'SF Pro Text', sans-serif" }}
+                className="flex-1 bg-transparent border-none outline-none text-sm placeholder:text-black/30"
+                style={{ color: "#1c1c1e", fontFamily: "-apple-system, 'SF Pro Text', sans-serif" }}
                 aria-label="Password" autoComplete="current-password" />
               <div className="flex items-center gap-0.5">
                 <button type="button" ref={calBtnRef}
